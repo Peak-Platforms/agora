@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamPal Broadcaster Panel</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+<style>
+  :root {
+    --bg:#0a0a0a;--surface:#111111;--border:#222222;--accent:#e8c84a;
+    --red:#cc2200;--green:#00cc66;--text:#e8e8e8;--muted:#666666;
+    --school-primary:#cc2200;--school-secondary:#ffffff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:1000;}
+
+  #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
+  .login-box{width:100%;max-width:420px;border:1px solid var(--border);background:var(--surface);padding:3rem;}
+  .login-logo{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:0.1em;color:var(--accent);line-height:1;margin-bottom:0.25rem;}
+  .login-subtitle{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:3rem;}
+  .field-label{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:0.5rem;}
+  .field-input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:0.9rem;padding:0.75rem 1rem;outline:none;transition:border-color 0.2s;margin-bottom:1.5rem;}
+  .field-input:focus{border-color:var(--accent);}
+  .btn-primary{width:100%;background:var(--accent);color:#000;border:none;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.15em;padding:0.9rem;cursor:pointer;transition:opacity 0.2s;}
+  .btn-primary:hover{opacity:0.85;}
+  .login-error{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--red);margin-top:1rem;display:none;}
+
+  #dashboard{display:none;}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:100;}
+  .topbar-left{display:flex;align-items:center;gap:1.5rem;}
+  .topbar-logo{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:0.1em;color:var(--accent);}
+  .school-badge{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;background:var(--school-primary);color:var(--school-secondary);padding:0.3rem 0.75rem;}
+  .topbar-right{display:flex;align-items:center;gap:1.5rem;}
+  .btn-logout{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--border);padding:0.4rem 0.75rem;cursor:pointer;transition:color 0.2s,border-color 0.2s;}
+  .btn-logout:hover{color:var(--text);border-color:var(--text);}
+
+  .nav-tabs{display:flex;border-bottom:1px solid var(--border);margin:0 2rem;gap:0;overflow-x:auto;}
+  .nav-tab{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.75rem 1.5rem;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:color 0.2s,border-color 0.2s;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;}
+  .nav-tab:hover{color:var(--text);}
+  .nav-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+  .tab-content{display:none;}.tab-content.active{display:block;}
+
+  .station-banner{margin:2rem;padding:2rem;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;}
+  .station-info h2{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.05em;line-height:1;}
+  .station-info p{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;margin-top:0.4rem;}
+  .station-controls{display:flex;align-items:center;gap:2rem;}
+  .toggle-wrap{display:flex;align-items:center;gap:1rem;}
+  .toggle-label{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;}
+  .toggle{position:relative;width:60px;height:28px;cursor:pointer;}
+  .toggle input{display:none;}
+  .toggle-track{position:absolute;inset:0;background:#1a1a1a;border:1px solid var(--border);transition:background 0.3s;}
+  .toggle input:checked+.toggle-track{background:var(--green);border-color:var(--green);}
+  .toggle-thumb{position:absolute;top:3px;left:3px;width:20px;height:20px;background:var(--muted);transition:transform 0.3s,background 0.3s;}
+  .toggle input:checked~.toggle-thumb{transform:translateX(32px);background:#000;}
+  .on-air-dot{width:10px;height:10px;border-radius:50%;background:var(--red);animation:pulse 1.5s infinite;display:none;}
+  .on-air-dot.active{display:block;}
+  @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(204,34,0,0.4);}50%{opacity:0.8;box-shadow:0 0 0 6px rgba(204,34,0,0);}}
+  .on-air-text{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);}
+
+  .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin:0 2rem 0;}
+  .stat-box{background:var(--surface);padding:1.5rem;text-align:center;}
+  .stat-number{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--accent);line-height:1;}
+  .stat-label{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:0.25rem;}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 2rem 2rem;}
+  @media(max-width:900px){.grid{grid-template-columns:1fr;}}
+  .panel{border:1px solid var(--border);background:var(--surface);}
+  .panel-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border);}
+  .panel-title{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
+  .panel-count{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--accent);}
+
+  .episode-list{padding:0.5rem;}
+  .episode-card{padding:1rem;border-bottom:1px solid var(--border);transition:background 0.15s;}
+  .episode-card:last-child{border-bottom:none;}
+  .episode-card:hover{background:rgba(255,255,255,0.02);}
+  .ep-school-tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;padding:0.2rem 0.5rem;background:var(--border);color:var(--muted);margin-bottom:0.5rem;}
+  .ep-title{font-size:0.85rem;font-weight:500;line-height:1.3;margin-bottom:0.5rem;color:var(--text);}
+  .ep-meta{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--muted);display:flex;gap:1rem;margin-bottom:0.75rem;}
+  .ep-actions{display:flex;gap:0.5rem;}
+  .btn-approve,.btn-reject,.btn-preview{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.35rem 0.75rem;border:none;cursor:pointer;transition:opacity 0.2s;}
+  .btn-approve{background:var(--green);color:#000;}
+  .btn-reject{background:transparent;color:var(--red);border:1px solid var(--red);}
+  .btn-preview{background:transparent;color:var(--muted);border:1px solid var(--border);}
+  .btn-approve:hover,.btn-reject:hover,.btn-preview:hover{opacity:0.75;}
+
+  .aired-item{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;padding:0.85rem 1.5rem;border-bottom:1px solid var(--border);}
+  .aired-item:last-child{border-bottom:none;}
+  .aired-title{font-size:0.8rem;color:var(--text);line-height:1.3;flex:1;}
+  .aired-meta{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);white-space:nowrap;text-align:right;}
+
+  .queries-panel{margin:1.5rem 2rem 2rem;}
+  .query-row{display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0;border-bottom:1px solid var(--border);}
+  .query-row:last-child{border-bottom:none;}
+  .query-text{flex:1;font-family:'IBM Plex Mono',monospace;font-size:0.8rem;color:var(--text);}
+  .btn-remove{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;background:none;border:1px solid var(--border);color:var(--muted);padding:0.25rem 0.5rem;cursor:pointer;transition:color 0.2s,border-color 0.2s;}
+  .btn-remove:hover{color:var(--red);border-color:var(--red);}
+  .add-query-row{display:flex;gap:0.75rem;margin-top:1rem;}
+  .query-input{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:0.8rem;padding:0.6rem 1rem;outline:none;transition:border-color 0.2s;}
+  .query-input:focus{border-color:var(--accent);}
+  .btn-add{background:var(--accent);color:#000;border:none;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.6rem 1.25rem;cursor:pointer;transition:opacity 0.2s;white-space:nowrap;}
+  .btn-add:hover{opacity:0.85;}
+  .settings-row{display:flex;gap:1.5rem;margin-top:1.5rem;flex-wrap:wrap;}
+  .setting-box{flex:1;min-width:200px;background:var(--surface);border:1px solid var(--border);padding:1.25rem;}
+  .setting-box label{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:0.75rem;}
+  .setting-select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:0.85rem;padding:0.5rem 0.75rem;outline:none;cursor:pointer;}
+  .btn-save-settings{margin-top:1rem;background:var(--accent);color:#000;border:none;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.6rem 1.25rem;cursor:pointer;transition:opacity 0.2s;}
+  .btn-save-settings:hover{opacity:0.85;}
+  .queries-note{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--muted);line-height:1.6;margin-top:0.5rem;}
+
+  /* ── Notifications tab ── */
+  .notif-category-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-bottom:1.25rem;}
+  @media(max-width:600px){.notif-category-grid{grid-template-columns:repeat(2,1fr);}}
+  .category-btn{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.6rem 0.5rem;cursor:pointer;border:1px solid var(--border);background:var(--bg);color:var(--muted);transition:all 0.2s;text-align:center;line-height:1.4;}
+  .category-btn:hover{border-color:var(--accent);color:var(--text);}
+  .category-btn.selected{background:var(--accent);color:#000;border-color:var(--accent);}
+  .notif-char-count{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);text-align:right;margin-top:0.25rem;}
+  .notif-char-count.warn{color:var(--accent);}
+  .notif-char-count.over{color:var(--red);}
+  .notif-preview-box{background:#1a1a1a;border:1px solid var(--border);padding:1rem 1.25rem;margin-top:1rem;}
+  .notif-preview-phone{background:#000;border-radius:12px;padding:1rem;max-width:320px;border:1px solid #333;}
+  .notif-preview-app{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;display:flex;align-items:center;gap:0.4rem;}
+  .notif-preview-app-dot{width:14px;height:14px;background:var(--red);border-radius:3px;display:inline-block;}
+  .notif-preview-title{font-size:0.8rem;font-weight:600;color:#fff;margin-bottom:0.2rem;}
+  .notif-preview-body{font-size:0.75rem;color:rgba(255,255,255,0.6);line-height:1.4;}
+  .btn-send-notif{width:100%;background:var(--red);color:#fff;border:none;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.15em;padding:0.9rem;cursor:pointer;transition:opacity 0.2s;margin-top:1rem;}
+  .btn-send-notif:hover{opacity:0.85;}
+  .btn-send-notif:disabled{opacity:0.4;cursor:not-allowed;}
+  .notif-log-row{display:flex;align-items:flex-start;gap:1rem;padding:0.85rem 1.5rem;border-bottom:1px solid var(--border);transition:background 0.15s;}
+  .notif-log-row:last-child{border-bottom:none;}
+  .notif-log-row:hover{background:rgba(255,255,255,0.02);}
+  .notif-cat-badge{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.5rem;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+  .notif-log-content{flex:1;min-width:0;}
+  .notif-log-title{font-size:0.85rem;font-weight:500;color:var(--text);margin-bottom:0.25rem;}
+  .notif-log-short{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);margin-bottom:0.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .notif-log-full{font-size:0.8rem;color:rgba(232,232,232,0.6);line-height:1.4;margin-top:0.35rem;}
+  .notif-log-meta{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);white-space:nowrap;text-align:right;flex-shrink:0;}
+
+  /* ── Live Chat ── */
+  .chat-mgmt-toolbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:0.75rem;}
+  .chat-mgmt-toolbar-left{display:flex;align-items:center;gap:1rem;}
+  .chat-live-indicator{display:flex;align-items:center;gap:0.5rem;font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;}
+  .chat-live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;}
+  .btn-clear-chat{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.4rem 0.9rem;cursor:pointer;transition:opacity 0.2s;background:transparent;color:var(--red);border:1px solid var(--red);}
+  .btn-clear-chat:hover{opacity:0.75;}
+  .btn-export-chat{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.4rem 0.9rem;cursor:pointer;transition:opacity 0.2s;background:transparent;color:var(--muted);border:1px solid var(--border);}
+  .btn-export-chat:hover{color:var(--text);border-color:var(--text);}
+  #chat-log{height:480px;overflow-y:auto;padding:0.5rem 0;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+  .chat-log-row{display:flex;align-items:flex-start;gap:1rem;padding:0.65rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.03);transition:background 0.15s;}
+  .chat-log-row:hover{background:rgba(255,255,255,0.02);}
+  .chat-log-meta{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--muted);white-space:nowrap;min-width:130px;padding-top:1px;}
+  .chat-log-name{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;font-weight:500;color:var(--accent);min-width:90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-top:1px;}
+  .chat-log-message{flex:1;font-size:0.85rem;color:var(--text);line-height:1.4;}
+  .chat-log-actions{display:flex;gap:0.4rem;flex-shrink:0;padding-top:1px;}
+  .btn-delete-msg{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.05em;background:none;border:1px solid var(--border);color:var(--muted);padding:0.2rem 0.45rem;cursor:pointer;transition:color 0.2s,border-color 0.2s;}
+  .btn-delete-msg:hover{color:var(--red);border-color:var(--red);}
+  .btn-ban-msg{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.05em;background:none;border:1px solid var(--red);color:var(--red);padding:0.2rem 0.45rem;cursor:pointer;transition:opacity 0.2s;}
+  .btn-ban-msg:hover{opacity:0.7;}
+  .banned-panel{margin-top:1.5rem;}
+  .banned-row{display:flex;align-items:center;gap:1rem;padding:0.75rem 1.5rem;border-bottom:1px solid var(--border);}
+  .banned-row:last-child{border-bottom:none;}
+  .banned-name{font-size:0.8rem;color:var(--text);min-width:120px;}
+  .banned-meta{flex:1;font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--muted);}
+  .btn-unban{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.35rem 0.75rem;border:1px solid var(--green);color:var(--green);background:none;cursor:pointer;transition:opacity 0.2s;}
+  .btn-unban:hover{opacity:0.75;}
+  .chat-auto-clear-row{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;border-top:1px solid var(--border);flex-wrap:wrap;}
+  .chat-auto-clear-row label{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+  #chat-filter-input{flex:1;min-width:160px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:0.75rem;padding:0.4rem 0.75rem;outline:none;transition:border-color 0.2s;}
+  #chat-filter-input:focus{border-color:var(--accent);}
+
+  /* ── Confirm ── */
+  .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:600;display:none;align-items:center;justify-content:center;padding:2rem;}
+  .confirm-overlay.open{display:flex;}
+  .confirm-box{background:var(--surface);border:1px solid var(--red);padding:2rem;width:100%;max-width:380px;text-align:center;}
+  .confirm-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.05em;color:var(--red);margin-bottom:0.75rem;}
+  .confirm-msg{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--muted);line-height:1.6;margin-bottom:1.5rem;}
+  .confirm-actions{display:flex;gap:0.75rem;justify-content:center;}
+  .btn-confirm-yes{background:var(--red);color:#fff;border:none;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.6rem 1.25rem;cursor:pointer;transition:opacity 0.2s;}
+  .btn-confirm-yes:hover{opacity:0.8;}
+  .btn-confirm-no{background:transparent;color:var(--muted);border:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.6rem 1.25rem;cursor:pointer;transition:color 0.2s;}
+  .btn-confirm-no:hover{color:var(--text);}
+
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:none;align-items:center;justify-content:center;padding:2rem;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--surface);border:1px solid var(--border);width:100%;max-width:700px;max-height:80vh;display:flex;flex-direction:column;}
+  .modal-header{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);flex-shrink:0;}
+  .modal-title{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
+  .modal-close{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;line-height:1;}
+  .modal-close:hover{color:var(--text);}
+  .modal-body{overflow-y:auto;padding:1.5rem;flex:1;}
+  .modal-ep-title{font-size:1rem;font-weight:600;margin-bottom:1.5rem;line-height:1.3;}
+  .script-text{font-family:'IBM Plex Sans',sans-serif;font-size:0.85rem;line-height:1.8;color:#ccc;white-space:pre-wrap;}
+  .modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:0.75rem;justify-content:flex-end;flex-shrink:0;}
+
+  .empty{padding:3rem;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--muted);letter-spacing:0.1em;}
+  .toast{position:fixed;bottom:2rem;right:2rem;background:var(--surface);border:1px solid var(--border);padding:1rem 1.5rem;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;letter-spacing:0.1em;z-index:900;transform:translateY(100px);opacity:0;transition:transform 0.3s,opacity 0.3s;}
+  .toast.show{transform:translateY(0);opacity:1;}
+  .toast.success{border-color:var(--green);color:var(--green);}
+  .toast.error{border-color:var(--red);color:var(--red);}
+  .loading{display:flex;align-items:center;justify-content:center;padding:3rem;gap:0.5rem;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.15em;}
+  .spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo" id="login-logo">StreamPal</div>
+    <div class="login-subtitle" id="login-subtitle">Broadcaster Panel</div>
+    <label class="field-label">Station Code</label>
+    <input class="field-input" id="login-school" type="text" placeholder="e.g. DOT-W" autocomplete="off" spellcheck="false">
+    <label class="field-label">Password</label>
+    <input class="field-input" id="login-password" type="password" placeholder="••••••••">
+    <button class="btn-primary" onclick="login()">SIGN IN</button>
+    <div class="login-error" id="login-error">Invalid station code or password.</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo" id="topbar-logo">StreamPal</div>
+      <div class="school-badge" id="school-badge">DOT-W</div>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('livechat',this)">Live Chat</button>
+  </div>
+
+  <!-- LIVE CHAT TAB -->
+  <div class="tab-content active" id="tab-livechat">
+    <div class="queries-panel">
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Live Chat Supervision</span><span class="panel-count" id="chat-msg-count">0 messages</span></div>
+        <div class="chat-mgmt-toolbar">
+          <div class="chat-mgmt-toolbar-left">
+            <div class="chat-live-indicator"><div class="chat-live-dot"></div><span style="color:var(--green);">LIVE</span></div>
+            <input id="chat-filter-input" type="text" placeholder="Filter by name or keyword…" oninput="filterChatLog()" />
+          </div>
+          <div style="display:flex;gap:0.5rem;align-items:center;">
+            <button class="btn-export-chat" onclick="exportChat()">&#8595; EXPORT</button>
+            <button class="btn-clear-chat"  onclick="confirmClearChat()">CLEAR ALL</button>
+          </div>
+        </div>
+        <div id="chat-log"><div class="loading"><div class="spinner"></div>LOADING...</div></div>
+        <div class="chat-auto-clear-row">
+          <label>Auto-clear after stream ends:</label>
+          <select class="setting-select" id="chat-autoclear" style="width:auto;min-width:180px;">
+            <option value="">Never (manual only)</option><option value="1">After 1 hour</option>
+            <option value="6">After 6 hours</option><option value="24">After 24 hours</option>
+          </select>
+          <button class="btn-save-settings" onclick="saveChatSettings()" style="margin-top:0;">SAVE</button>
+          <span id="chat-settings-status" style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--muted);"></span>
+        </div>
+      </div>
+
+      <div class="panel banned-panel">
+        <div class="panel-header"><span class="panel-title">Banned From Chat</span><span class="panel-count" id="banned-count">0</span></div>
+        <div id="banned-list"><div class="empty">NO BANNED USERS</div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end dashboard -->
+
+<!-- CONFIRM -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-title">Confirm</div>
+    <div class="confirm-msg" id="confirm-msg">This will permanently delete all chat messages for this station.</div>
+    <div class="confirm-actions">
+      <button class="btn-confirm-no" onclick="closeConfirm()">CANCEL</button>
+      <button class="btn-confirm-yes" id="confirm-yes-btn">DELETE ALL</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL      = 'https://hvqzrdlbtfezwuveincs.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2cXpyZGxidGZlend1dmVpbmNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyOTA1MTgsImV4cCI6MjA3ODg2NjUxOH0.30_fdpT1hu_m3zyf-8IywXWIozjIDnqv5RHs6T9hCTo';
+
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let currentStation      = null;
+let chatMessages        = [];
+let chatRealtimeChannel = null;
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+async function login() {
+  const school = document.getElementById('login-school').value.trim().toUpperCase();
+  const password = document.getElementById('login-password').value.trim();
+  const errEl = document.getElementById('login-error');
+  errEl.style.display = 'none';
+  const { data, error } = await sb.from('xsen_stations').select('*').eq('school', school).eq('operator_password', password).single();
+  if (error || !data) { errEl.textContent = 'Invalid station code or password.'; errEl.style.display = 'block'; return; }
+  currentStation = data;
+  sessionStorage.setItem('sp_station', JSON.stringify(data));
+  showDashboard();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') login(); });
+
+function logout() {
+  currentStation = null; sessionStorage.removeItem('sp_station'); unsubscribeChat();
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-password').value = '';
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function switchTab(tab, el) {
+  document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(e => e.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  if (el) el.classList.add('active');
+  if (tab === 'livechat') loadLiveChatTab();
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────────────
+async function showDashboard() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('school-badge').textContent = currentStation.school;
+  await loadLiveChatTab();
+}
+
+// ── LIVE CHAT ─────────────────────────────────────────────────────────────────
+async function loadLiveChatTab() {
+  document.getElementById('chat-log').innerHTML='<div class="loading"><div class="spinner"></div>LOADING...</div>';
+  const { data,error }=await sb.from('xsen_live_chat').select('id,name,message,created_at,device_id').eq('school',currentStation.school).order('created_at',{ascending:false}).limit(200);
+  if (error) { document.getElementById('chat-log').innerHTML='<div class="empty">COULD NOT LOAD CHAT</div>'; return; }
+  chatMessages=(data||[]).reverse(); renderChatLog(chatMessages); updateChatCount(chatMessages.length); subscribeChatRealtime();
+  const { data:stData }=await sb.from('xsen_stations').select('chat_autoclear_hours').eq('school',currentStation.school).single();
+  if (stData?.chat_autoclear_hours) document.getElementById('chat-autoclear').value=stData.chat_autoclear_hours;
+  loadBannedUsers();
+}
+function renderChatLog(messages) {
+  const container=document.getElementById('chat-log');
+  if (!messages.length) { container.innerHTML='<div class="empty">NO CHAT MESSAGES YET</div>'; return; }
+  container.innerHTML=messages.map(m=>{
+    const time=new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    const date=new Date(m.created_at).toLocaleDateString([],{month:'short',day:'numeric'});
+    const banBtn=m.device_id?`<button class="btn-ban-msg" onclick="banUser('${m.device_id}','${escapeHtml(m.name||'Fan').replace(/'/g,"\\'")}')">BAN</button>`:'';
+    return `<div class="chat-log-row" id="chat-row-${m.id}"><div class="chat-log-meta">${date} ${time}</div><div class="chat-log-name">${escapeHtml(m.name||'Fan')}</div><div class="chat-log-message">${escapeHtml(m.message)}</div><div class="chat-log-actions">${banBtn}<button class="btn-delete-msg" onclick="deleteChatMessage('${m.id}')">DEL</button></div></div>`;
+  }).join('');
+  container.scrollTop=container.scrollHeight;
+}
+function updateChatCount(n) { document.getElementById('chat-msg-count').textContent=`${n} message${n!==1?'s':''}`; }
+function filterChatLog() {
+  const term=document.getElementById('chat-filter-input').value.trim().toLowerCase();
+  if (!term) { renderChatLog(chatMessages); return; }
+  renderChatLog(chatMessages.filter(m=>(m.name||'').toLowerCase().includes(term)||(m.message||'').toLowerCase().includes(term)));
+}
+function subscribeChatRealtime() {
+  unsubscribeChat();
+  chatRealtimeChannel=sb.channel(`solo_live_chat_${currentStation.school}`)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'xsen_live_chat',filter:`school=eq.${currentStation.school}`},payload=>{
+      chatMessages.push(payload.new); updateChatCount(chatMessages.length);
+      const term=document.getElementById('chat-filter-input')?.value.trim().toLowerCase()||'', m=payload.new;
+      if (!term||(m.name||'').toLowerCase().includes(term)||(m.message||'').toLowerCase().includes(term)) {
+        const container=document.getElementById('chat-log'); container.querySelector('.empty')?.remove();
+        const time=new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+        const date=new Date(m.created_at).toLocaleDateString([],{month:'short',day:'numeric'});
+        const row=document.createElement('div'); row.className='chat-log-row'; row.id=`chat-row-${m.id}`;
+        const banBtn=m.device_id?`<button class="btn-ban-msg" onclick="banUser('${m.device_id}','${escapeHtml(m.name||'Fan').replace(/'/g,"\\'")}')">BAN</button>`:'';
+        row.innerHTML=`<div class="chat-log-meta">${date} ${time}</div><div class="chat-log-name">${escapeHtml(m.name||'Fan')}</div><div class="chat-log-message">${escapeHtml(m.message)}</div><div class="chat-log-actions">${banBtn}<button class="btn-delete-msg" onclick="deleteChatMessage('${m.id}')">DEL</button></div>`;
+        container.appendChild(row); container.scrollTop=container.scrollHeight;
+      }
+    }).subscribe();
+}
+function unsubscribeChat() { if (chatRealtimeChannel) { sb.removeChannel(chatRealtimeChannel); chatRealtimeChannel=null; } }
+async function deleteChatMessage(id) {
+  const { error }=await sb.from('xsen_live_chat').delete().eq('id',id);
+  if (error) { showToast('Could not delete message','error'); return; }
+  chatMessages=chatMessages.filter(m=>String(m.id)!==String(id)); document.getElementById(`chat-row-${id}`)?.remove();
+  updateChatCount(chatMessages.length);
+  if (!chatMessages.length) document.getElementById('chat-log').innerHTML='<div class="empty">NO CHAT MESSAGES YET</div>';
+  showToast('Message deleted','');
+}
+
+// ── CHAT BANS ─────────────────────────────────────────────────────────────────
+function banUser(deviceId, name) {
+  document.getElementById('confirm-msg').textContent=`This will delete all chat messages from "${name}" and block them from posting in your chat until you unban them. Continue?`;
+  document.getElementById('confirm-yes-btn').onclick=()=>executeBanUser(deviceId,name);
+  document.getElementById('confirm-overlay').classList.add('open');
+}
+async function executeBanUser(deviceId, name) {
+  closeConfirm();
+  const { error:banErr }=await sb.from('xsen_chat_bans').upsert({
+    school: currentStation.school, device_id: deviceId, banned_name: name,
+    banned_by: currentStation.school, banned_at: new Date().toISOString(), unbanned_at: null
+  }, { onConflict: 'school,device_id' });
+  if (banErr) { showToast('Ban failed','error'); return; }
+  const { error:delErr }=await sb.from('xsen_live_chat').delete().eq('school',currentStation.school).eq('device_id',deviceId);
+  if (delErr) showToast('Banned, but could not delete their prior messages','error');
+  chatMessages=chatMessages.filter(m=>m.device_id!==deviceId);
+  renderChatLog(chatMessages); updateChatCount(chatMessages.length);
+  showToast(`${name} banned from chat`,'success');
+  loadBannedUsers();
+}
+async function loadBannedUsers() {
+  const { data,error }=await sb.from('xsen_chat_bans').select('id,device_id,banned_name,banned_at').eq('school',currentStation.school).is('unbanned_at',null).order('banned_at',{ascending:false});
+  const list=document.getElementById('banned-list'), count=document.getElementById('banned-count');
+  if (error) { list.innerHTML='<div class="empty">COULD NOT LOAD</div>'; return; }
+  count.textContent=(data||[]).length;
+  if (!data || !data.length) { list.innerHTML='<div class="empty">NO BANNED USERS</div>'; return; }
+  list.innerHTML=data.map(b=>`<div class="banned-row"><div class="banned-name">${escapeHtml(b.banned_name||'Unknown')}</div><div class="banned-meta">Banned ${new Date(b.banned_at).toLocaleDateString()}</div><button class="btn-unban" onclick="unbanUser('${b.id}')">UNBAN</button></div>`).join('');
+}
+async function unbanUser(id) {
+  const { error }=await sb.from('xsen_chat_bans').update({unbanned_at:new Date().toISOString()}).eq('id',id);
+  if (error) { showToast('Unban failed','error'); return; }
+  showToast('User unbanned','success'); loadBannedUsers();
+}
+function confirmClearChat() {
+  document.getElementById('confirm-msg').textContent=`This will permanently delete all ${chatMessages.length} chat messages for ${currentStation.school}. This cannot be undone.`;
+  document.getElementById('confirm-yes-btn').onclick=executeClearchat;
+  document.getElementById('confirm-overlay').classList.add('open');
+}
+function closeConfirm() { document.getElementById('confirm-overlay').classList.remove('open'); }
+async function executeClearchat() {
+  closeConfirm();
+  const { error }=await sb.from('xsen_live_chat').delete().eq('school',currentStation.school);
+  if (error) { showToast('Clear failed','error'); return; }
+  chatMessages=[]; document.getElementById('chat-log').innerHTML='<div class="empty">CHAT CLEARED</div>'; updateChatCount(0); showToast('All chat messages cleared','success');
+}
+function exportChat() {
+  if (!chatMessages.length) { showToast('No messages to export','error'); return; }
+  const rows=chatMessages.map(m=>`"${m.created_at}","${(m.name||'Fan').replace(/"/g,'""')}","${(m.message||'').replace(/"/g,'""')}"`).join('\n');
+  const blob=new Blob(['timestamp,name,message\n'+rows],{type:'text/csv'});
+  const url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download=`streampal-chat-${currentStation.school}-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
+  showToast('Chat exported','success');
+}
+async function saveChatSettings() {
+  const hours=document.getElementById('chat-autoclear').value;
+  const { error }=await sb.from('xsen_stations').update({chat_autoclear_hours:hours?parseInt(hours):null,updated_at:new Date().toISOString()}).eq('school',currentStation.school);
+  const status=document.getElementById('chat-settings-status');
+  if (error) { showToast('Save failed','error'); return; }
+  status.textContent='Saved ✓'; setTimeout(()=>{status.textContent='';},2500); showToast('Chat settings saved','success');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg,type='') { const el=document.getElementById('toast'); el.textContent=msg; el.className=`toast show ${type}`; clearTimeout(toastTimer); toastTimer=setTimeout(()=>{el.className='toast';},3000); }
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function escapeHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+const saved=sessionStorage.getItem('sp_station');
+if (saved) { currentStation=JSON.parse(saved); showDashboard(); }
+</script>
+</body>
+</html>
