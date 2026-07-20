@@ -360,9 +360,10 @@ async function showDashboard() {
 }
 
 // ── STREAM KEY ────────────────────────────────────────────────────────────────
-function updateViewerLinkDisplay(key) {
+function updateViewerLinkDisplay() {
   const el = document.getElementById('viewer-link-display');
-  el.textContent = key ? `agorabroadcasting.com/${key}/app.html` : '— set a stream key first —';
+  const urlSlug = (currentStation.slug || currentStation.school || '').toLowerCase();
+  el.textContent = urlSlug ? `agorabroadcasting.com/${urlSlug}/app.html` : '— unknown station path —';
 }
 async function loadStreamKey() {
   const { data } = await sb.from('xsen_stations').select('stream_key').eq('school',currentStation.school).single();
@@ -370,7 +371,7 @@ async function loadStreamKey() {
   document.getElementById('stream-key-input').value = key;
   document.getElementById('sk-status-badge').textContent = key ? 'ACTIVE' : 'NOT SET';
   document.getElementById('sk-status-badge').style.color = key ? 'var(--green)' : 'var(--muted)';
-  updateViewerLinkDisplay(key);
+  updateViewerLinkDisplay();
 }
 async function saveStreamKey() {
   const key = document.getElementById('stream-key-input').value.trim().toLowerCase();
@@ -382,7 +383,7 @@ async function saveStreamKey() {
   sessionStorage.setItem('sp_station',JSON.stringify(currentStation));
   document.getElementById('sk-status-badge').textContent = 'ACTIVE';
   document.getElementById('sk-status-badge').style.color = 'var(--green)';
-  updateViewerLinkDisplay(key);
+  updateViewerLinkDisplay();
   showToast('Stream key saved — enter this in StreamPal Broadcaster','success');
 }
 
@@ -514,6 +515,7 @@ if (saved) { currentStation=JSON.parse(saved); showDashboard(); }
 </script>
 </body>
 </html>
+
 
 
 
