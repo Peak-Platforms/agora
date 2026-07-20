@@ -235,11 +235,32 @@
   </div>
 
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('livechat',this)">Live Chat</button>
+    <button class="nav-tab active" onclick="switchTab('streamkey',this)">Stream Key</button>
+    <button class="nav-tab" onclick="switchTab('livechat',this)">Live Chat</button>
+  </div>
+
+  <!-- STREAM KEY TAB -->
+  <div class="tab-content active" id="tab-streamkey">
+    <div class="queries-panel">
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Your Stream Key</span><span class="panel-count" id="sk-status-badge">NOT SET</span></div>
+        <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);">
+          <p class="queries-note">This is what you enter into StreamPal Broadcaster's Settings screen. Change it anytime — takes effect the next time you go live.</p>
+        </div>
+        <div style="padding:1.25rem 1.5rem;">
+          <label class="field-label">Stream Key</label>
+          <div style="display:flex;gap:0.75rem;">
+            <input class="query-input" id="stream-key-input" type="text" placeholder="e.g. dot-w" style="flex:1;" autocomplete="off" spellcheck="false">
+            <button class="btn-add" onclick="saveStreamKey()">SAVE</button>
+          </div>
+          <p class="queries-note" style="margin-top:0.75rem;">Your viewer link: <strong id="viewer-link-display" style="color:var(--accent);"></strong></p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- LIVE CHAT TAB -->
-  <div class="tab-content active" id="tab-livechat">
+  <div class="tab-content" id="tab-livechat">
     <div class="queries-panel">
       <div class="panel">
         <div class="panel-header"><span class="panel-title">Live Chat Supervision</span><span class="panel-count" id="chat-msg-count">0 messages</span></div>
@@ -326,7 +347,8 @@ function switchTab(tab, el) {
   document.querySelectorAll('.nav-tab').forEach(e => e.classList.remove('active'));
   document.getElementById(`tab-${tab}`).classList.add('active');
   if (el) el.classList.add('active');
-  if (tab === 'livechat') loadLiveChatTab();
+  if (tab === 'streamkey') loadStreamKey();
+  if (tab === 'livechat')  loadLiveChatTab();
 }
 
 // ── DASHBOARD ─────────────────────────────────────────────────────────────────
@@ -334,7 +356,34 @@ async function showDashboard() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('dashboard').style.display = 'block';
   document.getElementById('school-badge').textContent = currentStation.school;
-  await loadLiveChatTab();
+  await loadStreamKey();
+}
+
+// ── STREAM KEY ────────────────────────────────────────────────────────────────
+function updateViewerLinkDisplay(key) {
+  const el = document.getElementById('viewer-link-display');
+  el.textContent = key ? `agorabroadcasting.com/neighbors/${key}` : '— set a stream key first —';
+}
+async function loadStreamKey() {
+  const { data } = await sb.from('xsen_stations').select('stream_key').eq('school',currentStation.school).single();
+  const key = data?.stream_key || '';
+  document.getElementById('stream-key-input').value = key;
+  document.getElementById('sk-status-badge').textContent = key ? 'ACTIVE' : 'NOT SET';
+  document.getElementById('sk-status-badge').style.color = key ? 'var(--green)' : 'var(--muted)';
+  updateViewerLinkDisplay(key);
+}
+async function saveStreamKey() {
+  const key = document.getElementById('stream-key-input').value.trim().toLowerCase();
+  if (!key) { showToast('Enter a stream key','error'); return; }
+  if (!/^[a-z0-9-]+$/.test(key)) { showToast('Use only lowercase letters, numbers, and hyphens','error'); return; }
+  const { error } = await sb.from('xsen_stations').update({ stream_key: key, updated_at: new Date().toISOString() }).eq('school',currentStation.school);
+  if (error) { showToast('Failed to save stream key','error'); return; }
+  currentStation.stream_key = key;
+  sessionStorage.setItem('sp_station',JSON.stringify(currentStation));
+  document.getElementById('sk-status-badge').textContent = 'ACTIVE';
+  document.getElementById('sk-status-badge').style.color = 'var(--green)';
+  updateViewerLinkDisplay(key);
+  showToast('Stream key saved — enter this in StreamPal Broadcaster','success');
 }
 
 // ── LIVE CHAT ─────────────────────────────────────────────────────────────────
@@ -465,3 +514,4 @@ if (saved) { currentStation=JSON.parse(saved); showDashboard(); }
 </script>
 </body>
 </html>
+
