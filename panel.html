@@ -363,7 +363,9 @@ async function showDashboard() {
 function updateViewerLinkDisplay() {
   const el = document.getElementById('viewer-link-display');
   const urlSlug = (currentStation.slug || currentStation.school || '').toLowerCase();
-  el.textContent = urlSlug ? `agorabroadcasting.com/${urlSlug}/app.html` : '— unknown station path —';
+  const isAgora = currentStation.plan === 'streampal';
+  const domain  = isAgora ? 'agorabroadcasting.com' : 'xsen.fun';
+  el.textContent = urlSlug ? `${domain}/${urlSlug}/app.html` : '— unknown station path —';
 }
 async function loadStreamKey() {
   const { data } = await sb.from('xsen_stations').select('stream_key').eq('school',currentStation.school).single();
@@ -515,6 +517,7 @@ if (saved) { currentStation=JSON.parse(saved); showDashboard(); }
 </script>
 </body>
 </html>
+
 
 
 
