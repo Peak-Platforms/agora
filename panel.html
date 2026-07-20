@@ -18,11 +18,11 @@
   body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:1000;}
 
   #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
-  .login-box{width:100%;max-width:420px;border:1px solid var(--border);background:var(--surface);padding:3rem;}
+  .login-box{width:100%;max-width:420px;border:1px solid var(--border);background:var(--surface);padding:3rem;text-align:center;}
   .login-logo{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:0.1em;color:var(--accent);line-height:1;margin-bottom:0.25rem;}
   .login-subtitle{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:3rem;}
-  .field-label{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:0.5rem;}
-  .field-input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:0.9rem;padding:0.75rem 1rem;outline:none;transition:border-color 0.2s;margin-bottom:1.5rem;}
+  .field-label{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:0.5rem;text-align:left;}
+  .field-input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:0.9rem;padding:0.75rem 1rem;outline:none;transition:border-color 0.2s;margin-bottom:1.5rem;text-align:left;}
   .field-input:focus{border-color:var(--accent);}
   .btn-primary{width:100%;background:var(--accent);color:#000;border:none;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.15em;padding:0.9rem;cursor:pointer;transition:opacity 0.2s;}
   .btn-primary:hover{opacity:0.85;}
@@ -518,6 +518,7 @@ if (saved) { currentStation=JSON.parse(saved); showDashboard(); }
 </script>
 </body>
 </html>
+
 
 
 
