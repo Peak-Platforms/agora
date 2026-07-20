@@ -220,6 +220,10 @@
     <input class="field-input" id="login-password" type="password" placeholder="••••••••">
     <button class="btn-primary" onclick="login()">SIGN IN</button>
     <div class="login-error" id="login-error">Invalid station code or password.</div>
+    <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;">
+      <a href="https://agorabroadcasting.com" target="_blank" rel="noopener" style="font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);text-decoration:none;">Agora Broadcasting Network</a>
+      <div style="font-size:0.65rem;color:var(--muted);margin-top:0.4rem;">A <a href="https://www.peak-platforms.com" target="_blank" rel="noopener" style="color:var(--muted);text-decoration:underline;">Peak Platforms</a> product</div>
+    </div>
   </div>
 </div>
 
@@ -518,6 +522,7 @@ if (saved) { currentStation=JSON.parse(saved); showDashboard(); }
 </script>
 </body>
 </html>
+
 
 
 
