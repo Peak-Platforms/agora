@@ -362,7 +362,7 @@ async function showDashboard() {
 // ── STREAM KEY ────────────────────────────────────────────────────────────────
 function updateViewerLinkDisplay(key) {
   const el = document.getElementById('viewer-link-display');
-  el.textContent = key ? `agorabroadcasting.com/neighbors/${key}` : '— set a stream key first —';
+  el.textContent = key ? `agorabroadcasting.com/${key}` : '— set a stream key first —';
 }
 async function loadStreamKey() {
   const { data } = await sb.from('xsen_stations').select('stream_key').eq('school',currentStation.school).single();
@@ -514,4 +514,5 @@ if (saved) { currentStation=JSON.parse(saved); showDashboard(); }
 </script>
 </body>
 </html>
+
 
