@@ -271,17 +271,23 @@
       </div>
       <!-- AD / SPONSOR SLATE overlay -->
       <div id="adOverlay" style="display:none;position:absolute;inset:0;background:#0a0a0a;z-index:15;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px;text-align:center;">
-        <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
-        <p style="font-family:var(--font-display);font-size:11px;letter-spacing:.25em;color:rgba(240,236,224,0.35);text-transform:uppercase;">Presented by</p>
-        <p id="adSponsorName" style="font-family:var(--font-display);font-size:22px;letter-spacing:.1em;color:var(--text);"></p>
-        <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
-        <p style="font-family:var(--font-display);font-size:10px;letter-spacing:.2em;color:rgba(240,236,224,0.2);margin-top:8px;">WE'LL BE RIGHT BACK</p>
+        <video id="adVideoEl" muted playsinline style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
+        <div id="adStaticContent" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;position:relative;z-index:1;">
+          <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
+          <p style="font-family:var(--font-display);font-size:11px;letter-spacing:.25em;color:rgba(240,236,224,0.35);text-transform:uppercase;">Presented by</p>
+          <p id="adSponsorName" style="font-family:var(--font-display);font-size:22px;letter-spacing:.1em;color:var(--text);"></p>
+          <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
+          <p style="font-family:var(--font-display);font-size:10px;letter-spacing:.2em;color:rgba(240,236,224,0.2);margin-top:8px;">WE'LL BE RIGHT BACK</p>
+        </div>
       </div>
       <!-- BREAK slate -->
       <div id="breakOverlay" style="display:none;position:absolute;inset:0;background:#0a0a0a;background-size:cover;background-position:center;z-index:15;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
-        <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
-        <p style="font-family:var(--font-display);font-size:13px;letter-spacing:.2em;color:rgba(240,236,224,0.4);text-shadow:0 1px 4px rgba(0,0,0,.8);">WE'LL BE RIGHT BACK</p>
-        <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
+        <video id="breakVideoEl" muted playsinline style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
+        <div id="breakStaticContent" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;position:relative;z-index:1;">
+          <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
+          <p style="font-family:var(--font-display);font-size:13px;letter-spacing:.2em;color:rgba(240,236,224,0.4);text-shadow:0 1px 4px rgba(0,0,0,.8);">WE'LL BE RIGHT BACK</p>
+          <div style="width:50px;height:2px;background:var(--primary);opacity:.5;"></div>
+        </div>
       </div>
       <!-- SCOREBOARD overlay for fans -->
       <div id="fanScoreboard" style="display:none;position:absolute;bottom:0;left:0;right:0;z-index:12;background:rgba(0,0,0,0.82);backdrop-filter:blur(4px);padding:6px 12px;border-top:1px solid rgba(255,255,255,.06);">
@@ -802,15 +808,39 @@ document.addEventListener('DOMContentLoaded', async () => {
     const hlsUrl    = data?.hls_stream_url || '';
     const adOvl     = document.getElementById('adOverlay');
     const brkOvl    = document.getElementById('breakOverlay');
+    const adVid     = document.getElementById('adVideoEl');
+    const brkVid    = document.getElementById('breakVideoEl');
+    const adStatic  = document.getElementById('adStaticContent');
+    const brkStatic = document.getElementById('breakStaticContent');
     const sponsorEl = document.getElementById('adSponsorName');
     const scoreboard= document.getElementById('fanScoreboard');
 
     // Parse ad_url JSON
     let meta = {};
     try { meta = JSON.parse(data?.ad_url || '{}'); } catch(e) { meta = {}; }
-    const sponsor  = meta.sponsor || '';
-    const imageUrl = meta.image   || '';
-    const score    = meta.score   || null;
+    const sponsor  = meta.sponsor  || '';
+    const imageUrl = meta.image    || '';
+    const videoUrl = meta.videoUrl || '';
+    const score    = meta.score    || null;
+
+    // Show a video ad in the given overlay if videoUrl is set, otherwise
+    // fall back to the existing static text/image content.
+    function applyOverlayContent(videoEl, staticEl, url) {
+      if (url) {
+        staticEl.style.display = 'none';
+        videoEl.style.display = 'block';
+        if (videoEl.dataset.src !== url) {
+          videoEl.dataset.src = url;
+          videoEl.src = url;
+          videoEl.play().catch(() => {});
+        }
+      } else {
+        videoEl.style.display = 'none';
+        videoEl.removeAttribute('src');
+        videoEl.dataset.src = '';
+        staticEl.style.display = 'flex';
+      }
+    }
 
     // Update fan scoreboard
     if (score && scoreboard) {
@@ -850,18 +880,24 @@ document.addEventListener('DOMContentLoaded', async () => {
       tabLiveVideo.style.display = 'block';
       if (!tabLiveVideo.classList.contains('active')) tabLiveVideo.click();
       brkOvl.style.display = 'none';
+      if (brkVid) { brkVid.pause(); brkVid.style.display = 'none'; brkVid.dataset.src = ''; }
       if (sponsorEl) sponsorEl.textContent = sponsor || 'Our Sponsor';
       applyBgImage(adOvl, imageUrl);
+      applyOverlayContent(adVid, adStatic, videoUrl);
       adOvl.style.display = 'flex';
     } else if (mode === 'break') {
       tabLiveVideo.style.display = 'block';
       if (!tabLiveVideo.classList.contains('active')) tabLiveVideo.click();
       adOvl.style.display  = 'none';
+      if (adVid) { adVid.pause(); adVid.style.display = 'none'; adVid.dataset.src = ''; }
       applyBgImage(brkOvl, imageUrl);
+      applyOverlayContent(brkVid, brkStatic, videoUrl);
       brkOvl.style.display = 'flex';
     } else {
       adOvl.style.display  = 'none';
       brkOvl.style.display = 'none';
+      if (adVid)  { adVid.pause();  adVid.style.display  = 'none'; adVid.dataset.src  = ''; }
+      if (brkVid) { brkVid.pause(); brkVid.style.display = 'none'; brkVid.dataset.src = ''; }
       const spOffline = document.getElementById('spOffline');
       if (spOffline && isSP) spOffline.style.display = 'flex';
       clearHlsStream();
@@ -1169,4 +1205,6 @@ async function loadConfig(slug) {
 </script>
 </body>
 </html>
+
+
 
