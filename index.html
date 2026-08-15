@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agora Broadcasting Network</title>
+<meta name="description" content="Agora Broadcasting Network — The future of broadcasting, open to everyone. Faith, Community, and Education channels, homegrown and broadcast worldwide.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --accent-orange:#e0a458;
+    --accent-blue:#7fa8d9;
+    --text-primary:#f3f7ff;
+    --text-secondary:#d7e4f5;
+    --text-muted:#6d84a3;
+    --border-orange:#c98a3e;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html, body {
+    height:100%;
+    background:#04080f;
+    font-family:'Inter', sans-serif;
+    overflow-x:hidden;
+  }
+
+  .hero {
+    position:relative;
+    min-height:100vh;
+    min-height:100dvh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+
+  .bg-video {
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:cover;
+    z-index:0;
+  }
+
+  .bg-fallback {
+    position:absolute; inset:0;
+    background:radial-gradient(ellipse at 50% 20%, #0d1b2e 0%, #04080f 60%, #020408 100%);
+    z-index:-1;
+  }
+
+  .content {
+    position:relative;
+    z-index:1;
+    text-align:center;
+    padding:24px;
+    max-width:640px;
+  }
+
+  .reveal {
+    opacity:0;
+    clip-path:inset(0 100% 0 0);
+    animation:wipeIn .6s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  @keyframes wipeIn {
+    0%   { opacity:0; clip-path:inset(0 100% 0 0); }
+    12%  { opacity:1; }
+    100% { opacity:1; clip-path:inset(0 0% 0 0); }
+  }
+
+  .eyebrow {
+    font-weight:700;
+    font-size:clamp(12px, 2.6vw, 15px);
+    letter-spacing:.35em;
+    text-transform:uppercase;
+    color:var(--accent-orange);
+    animation-delay:.55s;
+  }
+
+  .wordmark {
+    font-weight:700;
+    font-size:clamp(48px, 13vw, 88px);
+    letter-spacing:.03em;
+    color:var(--text-primary);
+    line-height:1;
+    margin-top:16px;
+    text-shadow:0 0 30px rgba(110,170,255,.25);
+    animation-delay:.95s;
+  }
+
+  .subword {
+    font-weight:600;
+    font-size:clamp(14px, 3.4vw, 20px);
+    letter-spacing:.35em;
+    text-transform:uppercase;
+    color:var(--accent-blue);
+    margin-top:14px;
+    animation-delay:1.45s;
+  }
+
+  .tagline {
+    font-weight:400;
+    font-size:clamp(16px, 3.6vw, 20px);
+    line-height:1.5;
+    color:var(--text-secondary);
+    margin-top:34px;
+    animation-delay:1.95s;
+  }
+
+  .tags {
+    font-weight:600;
+    font-size:clamp(11px, 2.4vw, 14px);
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:#9fb6d4;
+    margin-top:26px;
+    animation-delay:2.55s;
+  }
+  .tags .sep { color:var(--accent-blue); margin:0 12px; opacity:.7; }
+
+  .cta {
+    display:inline-block;
+    margin-top:34px;
+    padding:18px 44px;
+    border:1.5px solid var(--border-orange);
+    color:var(--text-primary);
+    font-weight:700;
+    font-size:clamp(13px, 2.6vw, 15px);
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    text-decoration:none;
+    background:rgba(201,138,62,.06);
+    transition:background .25s ease, transform .2s ease;
+    animation-delay:3.05s;
+  }
+  .cta:hover { background:rgba(201,138,62,.18); transform:translateY(-1px); }
+  .cta:focus-visible { outline:2px solid var(--accent-orange); outline-offset:4px; }
+
+  .footer-url {
+    position:absolute;
+    bottom:36px; left:0; right:0;
+    text-align:center;
+    z-index:1;
+    font-size:13px;
+    letter-spacing:.1em;
+    color:var(--text-muted);
+    animation-delay:3.55s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { animation:none; opacity:1; clip-path:none; }
+    .bg-video { display:none; }
+    .bg-fallback { z-index:0; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="hero">
+    <video class="bg-video" autoplay muted loop playsinline poster="agora-bg-poster.jpg">
+      <source src="https://storage.googleapis.com/xsenassets/agora-bg-loop.mp4" type="video/mp4">
+    </video>
+    <div class="bg-fallback"></div>
+
+    <div class="content">
+      <div class="eyebrow reveal">A Peak Platforms Network</div>
+      <h1 class="wordmark reveal">AGORA</h1>
+      <div class="subword reveal">Broadcasting Network</div>
+
+      <p class="tagline reveal">The Future of Broadcasting,<br>Open to Everyone</p>
+
+      <div class="tags reveal">
+        FAITH <span class="sep">◈</span> COMMUNITY <span class="sep">◈</span> EDUCATION
+      </div>
+
+      <a href="home.html" class="cta reveal">Enter the Agora</a>
+    </div>
+
+    <div class="footer-url reveal">agorabroadcasting.com</div>
+  </div>
+
+</body>
+</html>
