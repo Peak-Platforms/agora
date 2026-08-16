@@ -101,6 +101,15 @@
       animation-delay: 1.1s;
     }
     .pillars span { color: var(--accent-blue); margin: 0 12px; opacity: .7; }
+    .btn {
+      display: inline-block;
+      font-weight: 600; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.95rem 2.2rem; border-radius: 4px;
+      text-decoration: none; border: 1px solid var(--border-orange);
+      color: var(--text); background: rgba(224,164,88,0.1);
+      transition: background 0.25s ease, transform 0.2s ease;
+    }
+    .btn:hover { background: var(--accent-orange); color: var(--navy); transform: translateY(-1px); }
 
     /* SECTION SHARED */
     section { padding: 6rem 0; }
@@ -198,15 +207,26 @@
   <section id="hero">
     <div>
       <div class="hero-eyebrow reveal">A Peak Platforms Production</div>
-      <h1 class="hero-title reveal">The Birthplace of<br><span class="amp">Homegrown Broadcasting</span></h1>
-      <p class="hero-sub reveal">A 24/7 broadcast network — live on TV and online, <span class="amp">worldwide</span>.</p>
-      <div class="pillars reveal">GLOBAL <span>◈</span> INDEPENDENT <span>◈</span> UNFILTERED</div>
+      <h1 class="hero-title reveal">Every Community Has a Story.<br>Now It Has a <span class="amp">Station</span>.</h1>
+      <p class="hero-sub reveal">The network behind it all: <span class="amp">Agora Broadcasting</span> — see it in action, then build your own.</p>
+      <div class="pillars reveal" style="margin-bottom: 2.4rem;">GLOBAL <span>◈</span> INDEPENDENT <span>◈</span> UNFILTERED</div>
+      <a href="https://www.getyourstation.com" class="btn reveal" style="animation-delay: 1.3s;">Get Your Own Station</a>
     </div>
   </section>
 
   <div class="divider"></div>
 
   <section id="agora-defined">
+    <div class="container">
+      <div class="section-eyebrow">The Example</div>
+      <h2 class="section-title">This Is Agora — Our Flagship Station</h2>
+      <p class="section-lead">Agora Broadcasting Network isn't a community itself — it's the network that makes community stations possible. Agora is our own flagship station, built on that network, running live right now as proof of what a community station can be.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section id="agora-defined2">
     <div class="container">
       <div class="section-eyebrow">The Name</div>
       <h2 class="section-title">What Is an Agora?</h2>
