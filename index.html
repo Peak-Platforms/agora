@@ -72,6 +72,10 @@
       position: relative;
       overflow: hidden;
       background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 0 2rem;
     }
     .bg-video {
       position: absolute; inset: 0;
@@ -93,14 +97,18 @@
       z-index: 2;
     }
     .hero-content {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
+      position: relative;
       z-index: 3;
       width: 100%;
       max-width: 1050px;
       text-align: center;
       padding: 0 6vw;
+    }
+    @media (max-width: 700px) {
+      #hero { padding: 5.5rem 0 2rem; }
+      .hero-eyebrow { margin-bottom: 1rem; }
+      .hero-title { margin-bottom: 0.9rem; }
+      .hero-sub { margin-bottom: 1.6rem; }
     }
     .hero-eyebrow {
       font-size: 0.7rem; letter-spacing: 0.32em; color: var(--accent-orange);
@@ -243,7 +251,7 @@
       <h1 class="hero-title reveal">Every Community Has a Story.<br>Now It Has a <span class="amp">Station</span>.</h1>
       <p class="hero-sub reveal">The network behind it all: <span class="amp">Agora Broadcasting</span> — see it in action, then get your own.</p>
       <div class="pillars reveal" style="margin-bottom: 2.4rem;">COMMUNITY <span>◈</span> TV <span>◈</span> WORLDWIDE</div>
-      <a href="https://www.getyourstation.com" class="btn reveal" style="animation-delay: 1.3s;">Get Your Own Station</a>
+      <a href="https://www.getyourstation.com" class="btn reveal" style="animation-delay: 1.3s; margin-top: 3rem;">Get Your Own Station</a>
     </div>
   </section>
 
@@ -372,3 +380,4 @@
 
 </body>
 </html>
+
