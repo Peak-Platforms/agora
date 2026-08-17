@@ -69,11 +69,8 @@
     #hero {
       min-height: 100vh;
       min-height: 100dvh;
-      display: flex; align-items: center; justify-content: center;
-      text-align: center;
       position: relative;
       overflow: hidden;
-      padding: 9rem 6vw 4rem;
       background: var(--navy);
     }
     .bg-video {
@@ -95,7 +92,16 @@
       background: linear-gradient(180deg, rgba(4,8,15,0.55) 0%, rgba(4,8,15,0.75) 100%);
       z-index: 2;
     }
-    #hero > * { position: relative; z-index: 3; }
+    .hero-content {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      width: 100%;
+      max-width: 700px;
+      text-align: center;
+      padding: 0 6vw;
+    }
     .hero-eyebrow {
       font-size: 0.7rem; letter-spacing: 0.32em; color: var(--accent-orange);
       text-transform: uppercase; margin-bottom: 1.6rem;
@@ -232,7 +238,7 @@
     </video>
     <div class="bg-fallback"></div>
     <div class="hero-overlay"></div>
-    <div>
+    <div class="hero-content">
       <div class="hero-eyebrow reveal">A Peak Platforms Production</div>
       <h1 class="hero-title reveal">Every Community Has a Story.<br>Now It Has a <span class="amp">Station</span>.</h1>
       <p class="hero-sub reveal">The network behind it all: <span class="amp">Agora Broadcasting</span> — see it in action, then get your own.</p>
