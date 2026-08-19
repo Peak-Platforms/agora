@@ -1,288 +1,382 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Get Your Station — Broadcasting, By the People</title>
-<meta name="description" content="Every community has a story. Get Your Station helps churches, schools, and community organizations launch their own TV broadcast station on the Agora Broadcasting Network.">
-<link rel="canonical" href="https://www.getyourstation.com/">
-<link rel="icon" href="favicon.png" type="image/png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agora Broadcasting Network</title>
+  <meta name="description" content="Every community deserves a station. Agora Broadcasting Network is the flagship — see it live, then get your own community TV station worldwide.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #04080f;
+      --navy-2: #0b121f;
+      --navy-3: #131f34;
+      --accent-orange: #e0a458;
+      --accent-blue: #7fa8d9;
+      --border-orange: #c98a3e;
+      --text: #f3f7ff;
+      --text-muted: #d7e4f5;
+      --text-faint: #6d84a3;
+      --border: rgba(255,255,255,0.08);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      font-weight: 300;
+      line-height: 1.7;
+    }
+    h1, h2, h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    a { color: inherit; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 6vw; }
 
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Get Your Station">
-<meta property="og:title" content="Get Your Station — Broadcasting, By the People">
-<meta property="og:description" content="Every community has a story. Now it can have a station. Powered by the Agora Broadcasting Network.">
-<meta property="og:image" content="https://www.getyourstation.com/agora_globe.png">
-<meta property="og:url" content="https://www.getyourstation.com/">
+    /* NAV */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(4,8,15,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 6vw; }
+    .nav-mark { font-weight: 700; font-size: 0.95rem; letter-spacing: 0.18em; text-transform: uppercase; }
+    .nav-mark span { color: var(--accent-orange); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    .nav-links a { text-decoration: none; color: var(--text-muted); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent-orange); }
+    @media (max-width: 700px) { .nav-links { display: none; } }
 
-<!-- Twitter / X -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Get Your Station — Broadcasting, By the People">
-<meta name="twitter:description" content="Every community has a story. Now it can have a station. Powered by the Agora Broadcasting Network.">
-<meta name="twitter:image" content="https://www.getyourstation.com/agora_globe.png">
+    /* REVEAL */
+    .reveal {
+      opacity: 0;
+      clip-path: inset(0 100% 0 0);
+      animation: wipeIn .6s cubic-bezier(.2,.8,.2,1) forwards;
+    }
+    @keyframes wipeIn {
+      0%   { opacity: 0; clip-path: inset(0 100% 0 0); }
+      12%  { opacity: 1; }
+      100% { opacity: 1; clip-path: inset(0 0% 0 0); }
+    }
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --navy: #0F1829;
-    --navy-2: #16233F;
-    --bronze: #C4782A;
-    --bronze-light: #E0A25C;
-    --cream: #F5F1E6;
-    --white: #FFFFFF;
-    --line: rgba(245,241,230,0.14);
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    background:var(--navy);
-    color:var(--cream);
-    font-family:'Inter',sans-serif;
-    line-height:1.6;
-    overflow-x:hidden;
-  }
-  h1,h2,h3,.eyebrow{font-family:'Cinzel',serif;}
-  a{color:inherit;}
-  .wrap{max-width:1100px;margin:0 auto;padding:0 32px;}
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      min-height: 100dvh;
+      position: relative;
+      overflow: hidden;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 0 2rem;
+    }
+    .bg-video {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      background: var(--navy);
+    }
+    .bg-fallback {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 20%, rgba(224,164,88,0.07) 0%, transparent 60%),
+        var(--navy);
+      z-index: 0;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(4,8,15,0.55) 0%, rgba(4,8,15,0.75) 100%);
+      z-index: 2;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      width: 100%;
+      max-width: 1050px;
+      text-align: center;
+      padding: 0 6vw;
+    }
+    @media (max-width: 700px) {
+      #hero { padding: 5.5rem 0 2rem; }
+      .hero-eyebrow { margin-bottom: 1rem; }
+      .hero-title { margin-bottom: 0.9rem; }
+      .hero-sub { margin-bottom: 1.6rem; }
+    }
+    .hero-eyebrow {
+      font-size: 0.7rem; letter-spacing: 0.32em; color: var(--accent-orange);
+      text-transform: uppercase; margin-bottom: 1.6rem;
+      animation-delay: .3s;
+    }
+    .hero-title {
+      font-size: clamp(1.8rem, 3.6vw, 2.8rem); line-height: 1.15; margin-bottom: 1.3rem;
+      text-shadow: 0 0 30px rgba(110,170,255,.18);
+      animation-delay: .55s;
+    }
+    .amp { color: var(--accent-orange); }
+    .hero-title .amp { color: var(--accent-orange); }
+    .hero-sub {
+      font-weight: 400;
+      font-size: clamp(1rem, 1.6vw, 1.2rem);
+      color: var(--text-muted); letter-spacing: 0.01em;
+      max-width: 560px; margin: 0 auto 2.6rem;
+      animation-delay: .85s;
+    }
+    .pillars {
+      font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-faint); margin-bottom: 0;
+      animation-delay: 1.1s;
+    }
+    .pillars span { color: var(--accent-blue); margin: 0 12px; opacity: .7; }
+    .btn {
+      display: inline-block;
+      font-weight: 600; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.95rem 2.2rem; border-radius: 4px;
+      text-decoration: none; border: 1px solid var(--border-orange);
+      color: var(--text); background: rgba(224,164,88,0.1);
+      transition: background 0.25s ease, transform 0.2s ease;
+    }
+    .btn:hover { background: var(--accent-orange); color: var(--navy); transform: translateY(-1px); }
 
-  /* NAV */
-  nav{
-    position:fixed;top:0;left:0;right:0;z-index:50;
-    background:rgba(15,24,41,0.85);backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--line);
-  }
-  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:76px;}
-  .brand{font-family:'Cinzel',serif;font-weight:600;font-size:1.1rem;letter-spacing:0.04em;}
-  .brand span{color:var(--bronze-light);}
-  .nav-links{display:flex;gap:36px;font-size:0.9rem;letter-spacing:0.02em;}
-  .nav-links a{text-decoration:none;opacity:0.75;transition:opacity .2s;}
-  .nav-links a:hover{opacity:1;}
-  .nav-cta{
-    background:var(--bronze);color:var(--navy);padding:10px 22px;border-radius:2px;
-    font-weight:600;font-size:0.85rem;text-decoration:none;letter-spacing:0.02em;
-    transition:background .2s;
-  }
-  .nav-cta:hover{background:var(--bronze-light);}
-  @media (max-width:760px){.nav-links{display:none;}}
+    /* SECTION SHARED */
+    section { padding: 6rem 0; }
+    .section-eyebrow {
+      font-size: 0.7rem; letter-spacing: 0.26em; color: var(--accent-orange);
+      text-transform: uppercase; margin-bottom: 0.9rem;
+    }
+    .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 1.2rem; }
+    .section-lead { color: var(--text-muted); max-width: 620px; font-size: 0.98rem; font-weight: 300; }
+    .divider { height: 1px; background: var(--border); }
 
-  /* HERO */
-  .hero{
-    min-height:100vh;display:flex;align-items:center;position:relative;
-    padding-top:76px;overflow:hidden;
-  }
-  .hero-video{
-    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;
-  }
-  .hero-overlay{
-    position:absolute;inset:0;z-index:1;
-    background:
-      linear-gradient(100deg, rgba(15,24,41,0.94) 0%, rgba(15,24,41,0.72) 40%, rgba(15,24,41,0.4) 68%, rgba(15,24,41,0.65) 100%),
-      linear-gradient(0deg, var(--navy) 0%, transparent 18%);
-  }
-  .hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:1fr;width:100%;}
-  .eyebrow{
-    color:var(--bronze-light);font-size:0.78rem;letter-spacing:0.22em;text-transform:uppercase;
-    margin-bottom:22px;font-weight:600;
-  }
-  .hero h1{
-    font-size:clamp(2.4rem,5vw,3.6rem);font-weight:700;line-height:1.12;
-    color:var(--white);margin-bottom:22px;
-  }
-  .hero h1 em{color:var(--bronze-light);font-style:normal;}
-  .hero p.sub{
-    font-size:1.15rem;color:rgba(245,241,230,0.82);max-width:480px;margin-bottom:36px;
-    font-weight:400;
-  }
-  .cta-row{display:flex;gap:16px;flex-wrap:wrap;}
-  .btn-primary{
-    background:var(--bronze);color:var(--navy);padding:16px 32px;border-radius:2px;
-    font-weight:700;text-decoration:none;font-size:0.95rem;letter-spacing:0.02em;
-    transition:background .2s, transform .2s;display:inline-block;
-  }
-  .btn-primary:hover{background:var(--bronze-light);transform:translateY(-1px);}
-  .btn-secondary{
-    border:1px solid var(--line);color:var(--cream);padding:16px 32px;border-radius:2px;
-    text-decoration:none;font-size:0.95rem;font-weight:500;transition:border-color .2s;display:inline-block;
-  }
-  .btn-secondary:hover{border-color:var(--bronze-light);}
+    /* CHANNELS */
+    .channels-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem;
+    }
+    @media (max-width: 800px) { .channels-grid { grid-template-columns: 1fr; } }
+    .channel-card {
+      background: var(--navy-2); border: 1px solid var(--border); border-radius: 8px;
+      padding: 2rem 1.7rem;
+    }
+    .channel-card h3 { font-size: 1.1rem; margin-bottom: 0.7rem; color: var(--accent-orange); letter-spacing: 0.02em; }
+    .channel-card p { color: var(--text-muted); font-size: 0.9rem; font-weight: 300; }
+    .channel-live {
+      display: inline-block; margin-top: 1.2rem; font-size: 0.66rem;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent-orange);
+      border: 1px solid rgba(224,164,88,0.35); border-radius: 3px; padding: 0.25rem 0.7rem;
+    }
 
-  /* SECTIONS */
-  section{padding:120px 0;}
-  .section-head{max-width:640px;margin-bottom:64px;}
-  .section-head .eyebrow{margin-bottom:16px;}
-  .section-head h2{font-size:clamp(1.8rem,3.4vw,2.4rem);color:var(--white);font-weight:600;line-height:1.25;}
-  .section-head p{color:rgba(245,241,230,0.7);margin-top:16px;font-size:1.05rem;}
+    /* MODEL */
+    #model { background: var(--navy-2); }
+    .model-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 3rem; align-items: start; }
+    @media (max-width: 800px) { .model-grid { grid-template-columns: 1fr; } }
+    .phase-card { border-left: 2px solid var(--accent-orange); padding-left: 1.3rem; }
+    .phase-card h4 { font-size: 0.9rem; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.6rem; color: var(--accent-orange); font-weight: 700; }
+    .phase-card p { color: var(--text-muted); font-size: 0.9rem; font-weight: 300; }
 
-  .intro{background:var(--navy-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-  .intro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;}
-  @media (max-width:800px){.intro-grid{grid-template-columns:1fr;}}
-  .intro-card{border-left:2px solid var(--bronze);padding-left:22px;}
-  .intro-card h3{font-size:1.1rem;color:var(--white);margin-bottom:10px;font-weight:600;}
-  .intro-card p{color:rgba(245,241,230,0.68);font-size:0.95rem;}
+    /* PRICING */
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 3rem;
+    }
+    @media (max-width: 800px) { .pricing-grid { grid-template-columns: 1fr; } }
+    .price-card {
+      border: 1px solid var(--border); border-radius: 8px; padding: 1.8rem 1.4rem;
+      text-align: center; transition: border-color 0.2s;
+    }
+    .price-card:hover { border-color: var(--accent-orange); }
+    .price-tier { font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 0.8rem; }
+    .price-amount { font-size: 1.8rem; font-weight: 700; color: var(--accent-orange); margin-bottom: 0.3rem; }
+    .price-amount span { font-size: 0.85rem; color: var(--text-faint); font-weight: 300; }
+    .price-minutes { font-size: 0.8rem; color: var(--text-muted); font-weight: 300; }
 
-  /* STEPS - genuine sequence, numbering earned */
-  .steps{counter-reset:step;}
-  .step{
-    display:grid;grid-template-columns:80px 1fr;gap:28px;padding:36px 0;
-    border-top:1px solid var(--line);
-  }
-  .step:last-child{border-bottom:1px solid var(--line);}
-  .step-num{
-    counter-increment:step;font-family:'Cinzel',serif;font-size:2.2rem;color:var(--bronze);
-    font-weight:600;opacity:0.85;
-  }
-  .step-num::before{content: counter(step, decimal-leading-zero);}
-  .step h3{color:var(--white);font-size:1.25rem;margin-bottom:8px;font-weight:600;}
-  .step p{color:rgba(245,241,230,0.68);max-width:560px;}
+    /* MISSION */
+    #mission { text-align: center; }
+    #mission .section-lead { margin: 0 auto; }
+    .verse {
+      font-style: italic; font-size: 1rem;
+      color: var(--text-muted); max-width: 560px; margin: 2rem auto 0;
+      border-top: 1px solid var(--border); padding-top: 2rem; font-weight: 300;
+    }
+    .verse cite { display: block; margin-top: 0.8rem; font-style: normal; font-size: 0.72rem; letter-spacing: 0.12em; color: var(--accent-orange); }
 
-  /* WHO IT'S FOR */
-  .who{background:var(--navy-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-  .who-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);}
-  @media (max-width:800px){.who-grid{grid-template-columns:1fr;}}
-  .who-card{background:var(--navy-2);padding:44px 36px;}
-  .who-card h3{color:var(--bronze-light);font-size:1.1rem;margin-bottom:12px;font-weight:600;}
-  .who-card p{color:rgba(245,241,230,0.68);font-size:0.95rem;}
+    /* MEDIA */
+    .media-frame {
+      width: 100%; max-width: 640px; border-radius: 8px; margin: 2rem 0; display: block;
+      border: 1px solid var(--border);
+    }
 
-  /* CTA BAND */
-  .cta-band{
-    background:linear-gradient(120deg, var(--navy) 0%, #1C2C4D 100%);
-    text-align:center;padding:110px 0;
-  }
-  .cta-band h2{font-size:clamp(1.8rem,3.6vw,2.6rem);color:var(--white);font-weight:600;margin-bottom:18px;}
-  .cta-band p{color:rgba(245,241,230,0.72);max-width:520px;margin:0 auto 40px;}
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 3rem 0 2.4rem; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; }
+    .footer-mark { letter-spacing: 0.14em; font-size: 0.85rem; text-transform: uppercase; font-weight: 700; }
+    .footer-mark span { color: var(--accent-orange); }
+    .footer-meta { font-size: 0.75rem; color: var(--text-faint); text-align: right; }
+    .footer-meta a { color: var(--text-faint); text-decoration: none; }
+    .footer-meta a:hover { color: var(--accent-orange); }
 
-  footer{border-top:1px solid var(--line);padding:48px 0;}
-  .footer-grid{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;}
-  .footer-grid p{color:rgba(245,241,230,0.5);font-size:0.85rem;}
-  .footer-grid a{text-decoration:none;color:var(--bronze-light);font-size:0.85rem;}
-</style>
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { animation: none; opacity: 1; clip-path: none; }
+      .bg-video { display: none; }
+      .bg-fallback { z-index: 0; }
+    }
+  </style>
 </head>
 <body>
 
-<nav>
-  <div class="wrap">
-    <div class="brand">GET YOUR <span>STATION</span></div>
-    <div class="nav-links">
-      <a href="#how">How it works</a>
-      <a href="#who">Who it's for</a>
-      <a href="#start">Start</a>
+  <header>
+    <div class="nav">
+      <div class="nav-mark">AGORA BROADCASTING NETWORK</div>
+      <ul class="nav-links">
+        <li><a href="#model">How It Works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#mission">Mission</a></li>
+      </ul>
     </div>
-    <a href="#start" class="nav-cta">Start Your Station</a>
-  </div>
-</nav>
+  </header>
 
-<section class="hero">
-  <video class="hero-video" autoplay muted loop playsinline poster="agora_globe.png">
-    <source src="https://storage.googleapis.com/xsenassets/Agora%20globe.mp4" type="video/mp4">
-  </video>
-  <div class="hero-overlay"></div>
-  <div class="wrap hero-grid">
-    <div>
-      <div class="eyebrow">Powered by the Agora Broadcasting Network</div>
-      <h1>Broadcasting,<br><em>By the People.</em></h1>
-      <p class="sub">The future of broadcasting is open to everyone. If your community has a story, it deserves a real television station carrying it — not just another streaming account.</p>
-      <div class="cta-row">
-        <a href="#start" class="btn-primary">Start Your Station</a>
-        <a href="https://agorabroadcasting.com" class="btn-secondary">See Agora in Action</a>
-      </div>
+  <section id="hero">
+    <video class="bg-video" autoplay muted loop playsinline>
+      <source src="https://storage.googleapis.com/xsenassets/Agora%20globe.mp4" type="video/mp4">
+    </video>
+    <div class="bg-fallback"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow reveal">A Peak Platforms Production</div>
+      <h1 class="hero-title reveal">Every Community Has a Story.<br>Now It Has a <span class="amp">Station</span>.</h1>
+      <p class="hero-sub reveal">The network behind it all: <span class="amp">Agora Broadcasting</span> — see it in action, then get your own.</p>
+      <div class="pillars reveal" style="margin-bottom: 2.4rem;">COMMUNITY <span>◈</span> TV <span>◈</span> WORLDWIDE</div>
+      <a href="https://www.getyourstation.com" class="btn reveal" style="animation-delay: 1.3s; margin-top: 3rem;">Get Your Own Station</a>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="intro">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">What This Is</div>
-      <h2>Agora exists to help any community stand up its own TV broadcasting station.</h2>
-    </div>
-    <div class="intro-grid">
-      <div class="intro-card">
-        <h3>Not a streaming app</h3>
-        <p>A real broadcast network on TV — living rooms, smart TVs, and the places your community already watches.</p>
-      </div>
-      <div class="intro-card">
-        <h3>Your own station</h3>
-        <p>A dedicated channel carrying your name, your programming, and your voice — not a folder in someone else's app.</p>
-      </div>
-      <div class="intro-card">
-        <h3>Built to your reach</h3>
-        <p>One network behind it all, so a single church, school, or civic group can broadcast at a scale that used to require a license and a tower.</p>
-      </div>
-    </div>
-  </div>
-</section>
+  <div class="divider"></div>
 
-<section id="how">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">How It Works</div>
-      <h2>From idea to on-air, in three moves.</h2>
+  <section id="agora-defined">
+    <div class="container">
+      <div class="section-eyebrow">The Example</div>
+      <h2 class="section-title">This Is Agora — Our Flagship Station</h2>
+      <p class="section-lead">Agora Broadcasting Network isn't a community itself — it's the network that makes community stations possible. Agora is our own flagship station, built on that network, running live right now as proof of what a community station can be.</p>
     </div>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num"></div>
-        <div>
-          <h3>Tell us about your community</h3>
-          <p>Church, school, sports program, or civic group — tell us who you serve and what you want your station to carry.</p>
+  </section>
+
+  <div class="divider"></div>
+
+  <section id="agora-defined2">
+    <div class="container">
+      <div class="section-eyebrow">The Name</div>
+      <h2 class="section-title">What Is an Agora?</h2>
+      <p class="section-lead">In ancient Greek city-states, the agora (ἀγορά) was the open public square at the center of daily life — part marketplace, part town hall, part meeting ground. It was where merchants traded, citizens debated civic matters, and philosophers taught in the open air.</p>
+      <video class="media-frame" controls playsinline preload="metadata">
+        <source src="https://storage.googleapis.com/xsenassets/agora.mp4" type="video/mp4">
+      </video>
+      <p class="section-lead" style="margin-top:1.2rem;">Under Roman rule, the great Greek agoras — including the one in Athens — remained the beating heart of public life even as Rome built its own forums in the same spirit. It was in that very agora that the apostle Paul stood and reasoned daily with everyone who passed through, Jew and Greek alike.</p>
+      <p class="verse">"Meanwhile he reasoned in the synagogue with the Jews and the devout persons, and in the marketplace daily with those who happened to be there."<cite>Acts 17:17</cite></p>
+      <p class="section-lead" style="margin-top:2rem;">Then, as now, standing in the square meant something — a station of your own, built for those ready to be heard. <a href="https://www.getyourstation.com" style="color:var(--accent-orange); text-decoration:underline;">Get your own station →</a></p>
+      <p class="section-lead" style="margin-top:2rem;">Agora brings that same idea to television and the internet — a public square where people still gather, still speak, and still are heard.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section id="model">
+    <div class="container">
+      <div class="section-eyebrow">How It Works</div>
+      <h2 class="section-title">Broadcast On Agora, Then Own Your Square</h2>
+      <p class="section-lead">Agora grows with the organizations it serves — starting simple, scaling to a fully branded broadcast presence.</p>
+      <div class="model-grid">
+        <div class="phase-card">
+          <h4>Phase One — Broadcast On Agora</h4>
+          <p>Churches, schools, and community organizations broadcast directly on Agora's shared channels — live streaming without building any infrastructure of their own.</p>
         </div>
-      </div>
-      <div class="step">
-        <div class="step-num"></div>
-        <div>
-          <h3>We build your station</h3>
-          <p>Your channel is set up on the Agora Broadcasting Network — branded, scheduled, and ready for your content.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num"></div>
-        <div>
-          <h3>You go live</h3>
-          <p>Your station broadcasts to smart TVs everywhere Agora reaches, with your community driving what airs.</p>
+        <div class="phase-card">
+          <h4>Phase Two — Your Own Station</h4>
+          <p>As organizations grow, Agora offers a fully branded, dedicated broadcast station — same infrastructure, their own identity and audience. <a href="https://www.getyourstation.com" style="color:var(--accent-orange); text-decoration:underline;">Get your own station →</a></p>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="who" id="who">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">Who It's For</div>
-      <h2>Every community has a story. Now it can have a station.</h2>
-    </div>
-  </div>
-  <div class="who-grid">
-    <div class="who-card">
-      <h3>Faith Communities</h3>
-      <p>Carry services, teaching, and ministry programming to your congregation and beyond, on a channel that's truly yours.</p>
-    </div>
-    <div class="who-card">
-      <h3>Schools & Athletics</h3>
-      <p>Broadcast games, ceremonies, and school life to the families and fans who can't always be in the stands.</p>
-    </div>
-    <div class="who-card">
-      <h3>Community Organizations</h3>
-      <p>Give local news, events, and civic life a permanent home — not a feed that disappears in an algorithm.</p>
-    </div>
-  </div>
-</section>
+  <div class="divider"></div>
 
-<section class="cta-band" id="start">
-  <div class="wrap">
-    <h2>Ready to get your station?</h2>
-    <p>Tell us who you are and what you want to broadcast. We'll follow up to map out your station.</p>
-    <a href="mailto:kevin@getyourstation.com" class="btn-primary">Start the Conversation</a>
-  </div>
-</section>
+  <section id="ecosystem">
+    <div class="container">
+      <div class="section-eyebrow">The Ecosystem</div>
+      <h2 class="section-title">Agora Is the Destination. Everything Else Is the Onramp.</h2>
+      <p class="section-lead">Homegrown broadcasting starts with a single encoder in someone's hand and ends up live on a real network — same infrastructure carrying every client from first stream to full production.</p>
+      <div class="channels-grid" style="margin-top:3rem;">
+        <div class="channel-card">
+          <h3>Capture</h3>
+          <p>Broadcasters go live with a simple encoder — a phone, a camera, a single operator — no studio or crew required to get started.</p>
+        </div>
+        <div class="channel-card">
+          <h3>Produce</h3>
+          <p>Multi-camera organizations step up to a live director's console for real-time switching, graphics, and a full production workflow.</p>
+        </div>
+        <div class="channel-card">
+          <h3>Broadcast</h3>
+          <p>Every stream lands on Agora's Faith, Community, or Education channel — live, 24/7, with no infrastructure for the broadcaster to build or maintain.</p>
+        </div>
+      </div>
+      <p class="section-lead" style="margin-top:2.2rem;">Whether an organization arrives ready to go live on day one or grows into a full multi-camera production, Agora is the same network waiting at the other end.</p>
+    </div>
+  </section>
 
-<footer>
-  <div class="wrap footer-grid">
-    <p>&copy; 2026 Get Your Station · Part of the Agora Broadcasting Network · A Peak Platforms Production</p>
-    <a href="https://agorabroadcasting.com">agorabroadcasting.com &rarr;</a>
-  </div>
-</footer>
+  <div class="divider"></div>
+
+  <section id="pricing">
+    <div class="container">
+      <div class="section-eyebrow">Pricing</div>
+      <h2 class="section-title">Simple Plans for Broadcasters</h2>
+      <p class="section-lead">Billed to your organization, not your viewers. Every plan includes live 24/7 streaming — no cost to the people watching.</p>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-tier">Agora Community</div>
+          <div class="price-amount">$49<span>/mo</span></div>
+          <div class="price-minutes">Broadcast on Agora's shared Faith, Community, and Education channels — no infrastructure to build.</div>
+        </div>
+        <div class="price-card">
+          <div class="price-tier">Agora Plus</div>
+          <div class="price-amount">$149<span>/mo</span></div>
+          <div class="price-minutes">Priority scheduling, enhanced analytics, and expanded airtime on shared channels.</div>
+        </div>
+        <div class="price-card">
+          <div class="price-tier">Agora Branded Station</div>
+          <div class="price-amount">$399–499<span>/mo</span></div>
+          <div class="price-minutes">Your own fully branded, dedicated Agora station — same infrastructure, your own identity and audience.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section id="mission">
+    <div class="container">
+      <div class="section-eyebrow">Why Agora</div>
+      <h2 class="section-title">A Home for Your Message</h2>
+      <p class="section-lead">Not everyone has a studio. Everyone has a message. Agora exists so that message finds an audience — live, worldwide, no algorithm standing in the way.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-mark">AGORA BROADCASTING NETWORK</div>
+      <div class="footer-meta">
+        © <span id="year"></span> Agora Broadcasting Network · A Peak Platforms Production<br>
+        <a href="https://peak-platforms.com" target="_blank">peak-platforms.com</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 
 </body>
 </html>
