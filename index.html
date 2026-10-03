@@ -205,6 +205,38 @@
     }
     .verse cite { display: block; margin-top: 0.8rem; font-style: normal; font-size: 0.72rem; letter-spacing: 0.12em; color: var(--accent-orange); }
 
+    /* OUR CALLING (scripture) */
+    #calling { background: var(--navy-2); }
+    #calling .calling-head { text-align: center; max-width: 720px; margin: 0 auto; }
+    #calling .calling-line {
+      font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.3; margin-bottom: 0.9rem;
+    }
+    #calling .calling-cite { font-size: 0.8rem; letter-spacing: 0.08em; color: var(--text-faint); }
+    #calling .calling-cite a { color: var(--accent-orange); text-decoration: none; border-bottom: 1px solid rgba(224,164,88,0.4); }
+    #calling .calling-cite a:hover { border-bottom-color: var(--accent-orange); }
+    .calling-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 3rem;
+    }
+    .calling-card {
+      background: var(--navy); border: 1px solid var(--border); border-top: 2px solid var(--accent-orange);
+      border-radius: 8px; padding: 1.7rem 1.5rem;
+    }
+    .calling-card h3 {
+      font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent-orange); margin-bottom: 0.3rem; font-weight: 600;
+    }
+    .calling-card .calling-sub { color: var(--text-faint); font-size: 0.85rem; margin-bottom: 1rem; }
+    .calling-card ul { list-style: none; }
+    .calling-card li { padding: 0.7rem 0; border-top: 1px solid var(--border); }
+    .calling-card li:first-child { border-top: 0; padding-top: 0; }
+    .calling-card .ref {
+      font-weight: 600; font-size: 0.9rem; color: var(--text); text-decoration: none;
+      border-bottom: 1px solid rgba(224,164,88,0.5);
+    }
+    .calling-card .ref:hover { color: var(--accent-orange); }
+    .calling-card .note { display: block; margin-top: 0.3rem; font-size: 0.85rem; color: var(--text-muted); font-weight: 300; }
+    .calling-foot { text-align: center; margin-top: 2.2rem; font-size: 0.75rem; color: var(--text-faint); }
+
     /* MEDIA */
     .media-frame {
       width: 100%; max-width: 640px; border-radius: 8px; margin: 2rem 0; display: block;
@@ -237,6 +269,7 @@
         <li><a href="#creators">For Creators</a></li>
         <li><a href="#pricing">Pricing</a></li>
         <li><a href="#mission">Mission</a></li>
+        <li><a href="#calling">Our Calling</a></li>
       </ul>
     </div>
   </header>
@@ -277,7 +310,7 @@
         <source src="https://storage.googleapis.com/xsenassets/agora.mp4" type="video/mp4">
       </video>
       <p class="section-lead" style="margin-top:1.2rem;">Under Roman rule, the great Greek agoras — including the one in Athens — remained the beating heart of public life even as Rome built its own forums in the same spirit. It was in that very agora that the apostle Paul stood and reasoned daily with everyone who passed through, Jew and Greek alike.</p>
-      <p class="verse">"Meanwhile he reasoned in the synagogue with the Jews and the devout persons, and in the marketplace daily with those who happened to be there."<cite>Acts 17:17</cite></p>
+      <p class="verse">"So he reasoned in the synagogue with the Jews and the devout persons, and in the marketplace every day with those who met him."<cite><a href="https://www.biblegateway.com/passage/?search=Acts+17:17&version=WEB" target="_blank" rel="noopener" style="text-decoration:none; border-bottom:1px solid rgba(224,164,88,0.5);">Acts 17:17 (WEB)</a></cite></p>
       <p class="section-lead" style="margin-top:2rem;">Then, as now, standing in the square meant something — a station of your own, built for those ready to be heard. <a href="https://www.getyourstation.com" style="color:var(--accent-orange); text-decoration:underline;">Get your own station →</a></p>
       <p class="section-lead" style="margin-top:2rem;">Agora brings that same idea to television and the internet — a public square where people still gather, still speak, and still are heard.</p>
     </div>
@@ -378,6 +411,61 @@
     </div>
   </section>
 
+  <div class="divider"></div>
+
+  <section id="calling" aria-labelledby="calling-title">
+    <div class="container">
+      <div class="calling-head">
+        <div class="section-eyebrow">Our Calling</div>
+        <h2 class="calling-line" id="calling-title">Called out of darkness into his light, to <span class="amp">broadcast</span> his excellencies.</h2>
+        <div class="calling-cite">Based on <a href="https://www.bibliatodo.com/en/bible/the-passion-translation/1peter-2-9" target="_blank" rel="noopener">1 Peter 2:9</a></div>
+      </div>
+
+      <div class="calling-grid">
+
+        <article class="calling-card">
+          <h3>Who we are</h3>
+          <p class="calling-sub">A people called and sent together.</p>
+          <ul>
+            <li><a class="ref" href="https://www.bibliatodo.com/en/bible/the-passion-translation/1peter-2-9" target="_blank" rel="noopener">1 Peter 2:9</a><span class="note">A chosen people, called to declare his excellencies.</span></li>
+            <li><a class="ref" href="https://www.biblegateway.com/passage/?search=Isaiah+43:21&version=WEB" target="_blank" rel="noopener">Isaiah 43:21</a><span class="note">A people formed to declare his praise.</span></li>
+          </ul>
+        </article>
+
+        <article class="calling-card">
+          <h3>What we do</h3>
+          <p class="calling-sub">Telling what God has done.</p>
+          <ul>
+            <li><a class="ref" href="https://www.biblegateway.com/passage/?search=Psalm+96:3&version=WEB" target="_blank" rel="noopener">Psalm 96:3</a><span class="note">Declare his glory among the nations.</span></li>
+            <li><a class="ref" href="https://www.biblegateway.com/passage/?search=1+Chronicles+16:8&version=WEB" target="_blank" rel="noopener">1 Chronicles 16:8</a><span class="note">Make his deeds known among the peoples.</span></li>
+            <li><a class="ref" href="https://www.biblegateway.com/passage/?search=Psalm+107:2&version=WEB" target="_blank" rel="noopener">Psalm 107:2</a><span class="note">The redeemed say so.</span></li>
+            <li><a class="ref" href="https://www.biblegateway.com/passage/?search=Romans+10:14-15&version=WEB" target="_blank" rel="noopener">Romans 10:14-15</a><span class="note">People need someone to tell them.</span></li>
+          </ul>
+        </article>
+
+        <article class="calling-card">
+          <h3>Where we go</h3>
+          <p class="calling-sub">Beyond our own town.</p>
+          <ul>
+            <li><a class="ref" href="https://www.biblegateway.com/passage/?search=Matthew+28:19-20&version=WEB" target="_blank" rel="noopener">Matthew 28:19-20</a><span class="note">Go to all nations.</span></li>
+            <li><a class="ref" href="https://www.biblegateway.com/passage/?search=Acts+1:8&version=WEB" target="_blank" rel="noopener">Acts 1:8</a><span class="note">Witnesses to the ends of the earth.</span></li>
+          </ul>
+        </article>
+
+        <article class="calling-card">
+          <h3>Together</h3>
+          <p class="calling-sub">Not alone.</p>
+          <ul>
+            <li><a class="ref" href="https://www.biblegateway.com/passage/?search=Hebrews+10:24-25&version=WEB" target="_blank" rel="noopener">Hebrews 10:24-25</a><span class="note">Encourage one another and keep meeting.</span></li>
+          </ul>
+        </article>
+
+      </div>
+
+      <p class="calling-foot">The 1 Peter 2:9 links open The Passion Translation; all other scripture links open the World English Bible (public domain). The Acts 17:17 passage appears above, in "What Is an Agora?"</p>
+    </div>
+  </section>
+
   <footer>
     <div class="container footer-inner">
       <div class="footer-mark">AGORA BROADCASTING NETWORK</div>
@@ -394,6 +482,7 @@
 
 </body>
 </html>
+
 
 
 
