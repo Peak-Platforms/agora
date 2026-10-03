@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watch Agora Faith | Agora Broadcasting Network</title>
+  <meta name="description" content="Watch the Agora Faith channel live, 24/7.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #04080f;
+      --navy-2: #0b121f;
+      --accent-orange: #e0a458;
+      --border-orange: #c98a3e;
+      --text: #f3f7ff;
+      --text-muted: #d7e4f5;
+      --text-faint: #6d84a3;
+      --border: rgba(255,255,255,0.08);
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    a { color: inherit; }
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(4,8,15,0.92);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 6vw; }
+    .nav-mark { font-weight: 700; font-size: 0.95rem; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; }
+    .nav-back { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; color: var(--text-muted); }
+    .nav-back:hover { color: var(--accent-orange); }
+
+    main { max-width: 960px; margin: 0 auto; padding: 3rem 6vw 4rem; }
+    .eyebrow { font-size: 0.7rem; letter-spacing: 0.26em; color: var(--accent-orange); text-transform: uppercase; margin-bottom: 0.7rem; }
+    h1 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; margin-bottom: 0.6rem; }
+    .live-dot {
+      display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+      background: #e5484d; margin-right: 0.5rem; vertical-align: middle;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+    .lead { color: var(--text-muted); max-width: 620px; font-size: 0.98rem; margin-bottom: 1.6rem; }
+
+    .player-wrap {
+      position: relative; width: 100%; aspect-ratio: 16 / 9;
+      background: #000; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    }
+    video { width: 100%; height: 100%; display: block; background: #000; }
+    .status {
+      position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+      text-align: center; padding: 1.5rem; background: rgba(4,8,15,0.85);
+      color: var(--text-muted); font-size: 0.95rem;
+    }
+    .status.show { display: flex; }
+
+    /* Capacity overflow */
+    .capacity {
+      position: absolute; inset: 0; display: none; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      padding: 1.5rem; background: var(--navy-2);
+    }
+    .capacity.show { display: flex; }
+    .capacity h2 { font-size: clamp(1.1rem, 2.4vw, 1.5rem); margin-bottom: 0.6rem; }
+    .capacity p { color: var(--text-muted); max-width: 440px; font-size: 0.95rem; }
+    .capacity .btn { margin-top: 1.4rem; }
+
+    .note { margin-top: 1.2rem; font-size: 0.82rem; color: var(--text-faint); }
+    .btn {
+      display: inline-block; margin-top: 2rem;
+      font-weight: 600; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.85rem 2rem; border-radius: 4px; text-decoration: none;
+      border: 1px solid var(--border-orange); color: var(--text); background: rgba(224,164,88,0.1);
+      transition: background 0.25s ease;
+    }
+    .btn:hover { background: var(--accent-orange); color: var(--navy); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav">
+      <a class="nav-mark" href="index.html">AGORA BROADCASTING NETWORK</a>
+      <a class="nav-back" href="index.html">&larr; Back to site</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="eyebrow">Live Now</div>
+    <h1><span class="live-dot" aria-hidden="true"></span>Agora Faith</h1>
+    <p class="lead">Our faith channel, live 24/7. If the picture doesn't start on its own, press play and turn the sound on.</p>
+
+    <div class="player-wrap">
+      <video id="player" controls playsinline muted autoplay></video>
+      <div class="status" id="status" role="status">Connecting to the stream&hellip;</div>
+      <div class="capacity" id="capacity" role="alert">
+        <h2>We're at capacity right now</h2>
+        <p>To keep the stream smooth, viewing on this page is limited. You can still watch Agora live on X.</p>
+        <a class="btn" href="https://x.com/peak_platforms" target="_blank" rel="noopener">Watch on X</a>
+      </div>
+    </div>
+
+    <p class="note">Having trouble? Refresh the page, or check back in a moment. Streams occasionally restart.</p>
+
+    <a class="btn" href="index.html#creators">Have content? Get it aired</a>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+  <script>
+    (function () {
+      var SRC        = 'https://live.agorabroadcasting.com/hls/agora_faith/index.m3u8';
+      var VIEWER_API = 'https://live.xsen.fun:8443/viewer';
+      var STREAM     = 'agora_faith';
+      var HEARTBEAT_MS = 10000;
+
+      var video    = document.getElementById('player');
+      var status   = document.getElementById('status');
+      var capacity = document.getElementById('capacity');
+      var hls = null;
+      var retryTimer = null;
+      var token = null;
+      var heartbeatTimer = null;
+      var atCapacity = false;
+
+      function showStatus(msg) { status.textContent = msg; status.classList.add('show'); }
+      function hideStatus() { status.classList.remove('show'); }
+
+      function showCapacity() {
+        atCapacity = true;
+        stopHeartbeat();
+        if (hls) { hls.destroy(); hls = null; }
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+        hideStatus();
+        capacity.classList.add('show');
+      }
+
+      /* ---------- Viewer counting (viewer-api) ---------- */
+      function qs() { return '?stream=' + encodeURIComponent(STREAM); }
+
+      // Resolves 'ok' (joined), 'full' (at capacity), or 'error' (counter unreachable)
+      function join() {
+        return fetch(VIEWER_API + '/join' + qs(), { method: 'POST' })
+          .then(function (r) {
+            if (r.status === 403) return 'full';
+            if (!r.ok) return 'error';
+            return r.json().then(function (d) { token = d.token; return 'ok'; });
+          })
+          .catch(function () { return 'error'; });
+      }
+
+      function heartbeat() {
+        if (!token) return;
+        fetch(VIEWER_API + '/heartbeat' + qs() + '&token=' + encodeURIComponent(token), { method: 'POST' })
+          .then(function (r) {
+            if (r.status === 404) {
+              // Session expired on the server; try to rejoin
+              token = null;
+              join().then(function (res) { if (res === 'full') showCapacity(); });
+            }
+          })
+          .catch(function () {});
+      }
+
+      function startHeartbeat() {
+        stopHeartbeat();
+        heartbeatTimer = setInterval(heartbeat, HEARTBEAT_MS);
+      }
+      function stopHeartbeat() {
+        if (heartbeatTimer) { clearInterval(heartbeatTimer); heartbeatTimer = null; }
+      }
+
+      function leave() {
+        if (!token) return;
+        var url = VIEWER_API + '/leave' + qs() + '&token=' + encodeURIComponent(token);
+        if (navigator.sendBeacon) navigator.sendBeacon(url);
+        else fetch(url, { method: 'POST', keepalive: true }).catch(function () {});
+      }
+      window.addEventListener('pagehide', leave);
+
+      /* ---------- Player ---------- */
+      function scheduleRetry() {
+        if (retryTimer || atCapacity) return;
+        showStatus('The stream is unavailable right now. Retrying\u2026');
+        retryTimer = setTimeout(function () { retryTimer = null; start(); }, 10000);
+      }
+
+      function start() {
+        if (atCapacity) return;
+        if (hls) { hls.destroy(); hls = null; }
+
+        if (window.Hls && Hls.isSupported()) {
+          hls = new Hls();
+          hls.loadSource(SRC);
+          hls.attachMedia(video);
+          hls.on(Hls.Events.MANIFEST_PARSED, function () {
+            hideStatus();
+            var p = video.play();
+            if (p && p.catch) p.catch(function () {});
+          });
+          hls.on(Hls.Events.ERROR, function (evt, data) {
+            if (data.fatal) scheduleRetry();
+          });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          // Safari / iOS play HLS natively
+          video.src = SRC;
+          video.addEventListener('loadedmetadata', hideStatus);
+          video.addEventListener('error', scheduleRetry);
+          var p = video.play();
+          if (p && p.catch) p.catch(function () {});
+        } else {
+          showStatus('This browser can\u2019t play the stream. Try Chrome, Safari, or Firefox.');
+        }
+      }
+
+      video.addEventListener('playing', hideStatus);
+
+      /* ---------- Boot: join first, then play ---------- */
+      join().then(function (result) {
+        if (result === 'full') { showCapacity(); return; }
+        // 'ok' -> counted; 'error' -> counter unreachable, let them watch anyway
+        if (result === 'ok') startHeartbeat();
+        start();
+      });
+    })();
+  </script>
+
+</body>
+</html>
