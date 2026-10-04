@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agora Broadcasting Network</title>
-  <meta name="description" content="Every community deserves a station. Agora Broadcasting Network is the flagship — see it live, then get your own community TV station worldwide.">
+  <meta name="description" content="Community TV, by the people. Watch live faith and community programming on Agora Broadcasting Network — and get your own station when you're ready.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -145,6 +145,11 @@
     }
     .btn:hover { background: var(--accent-orange); color: var(--navy); transform: translateY(-1px); }
     .hero-cta { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 3rem; }
+    .hero-link { margin-top: 1.6rem; font-size: 0.85rem; color: var(--text-muted); }
+    .hero-link a { color: var(--accent-orange); text-decoration: none; border-bottom: 1px solid rgba(224,164,88,0.4); }
+    .hero-link a:hover { border-bottom-color: var(--accent-orange); }
+    #get-station { text-align: center; }
+    #get-station .section-lead { margin: 0 auto 2rem; }
 
     /* SECTION SHARED */
     section { padding: 6rem 0; }
@@ -270,13 +275,13 @@
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <div class="hero-eyebrow reveal">A Peak Platforms Production</div>
-      <h1 class="hero-title reveal">Every Community Has a Story.<br>Now It Has a <span class="amp">Station</span>.</h1>
-      <p class="hero-sub reveal">The network behind it all: <span class="amp">Agora Broadcasting</span> — see it in action, then get your own.</p>
+      <h1 class="hero-title reveal">Community TV,<br>by the <span class="amp">people</span>.</h1>
+      <p class="hero-sub reveal">Watch live faith and community programming on <span class="amp">Agora Broadcasting</span>, on your TV or phone.</p>
      <div class="pillars reveal" style="margin-bottom: 2.4rem;">COMMUNITY <span>◈</span> <a href="#creators" style="color:inherit; text-decoration:none;">CREATORS</a> <span>◈</span> WORLDWIDE</div>
       <div class="hero-cta">
-        <a href="https://agorabroadcasting.com/watch.html" class="btn reveal" style="animation-delay: 1.3s;">Watch Agora Faith</a>
-        <a href="https://www.getyourstation.com" class="btn reveal" style="animation-delay: 1.3s;">Get Your Own Station</a>
+        <a href="https://agorabroadcasting.com/watch.html" class="btn reveal" style="animation-delay: 1.3s;">Watch Now</a>
       </div>
+      <p class="hero-link reveal" style="animation-delay: 1.5s;">Want a station of your own? <a href="#get-station">Get started &rarr;</a></p>
     </div>
   </section>
 
@@ -322,6 +327,14 @@
         <div class="phase-card">
           <h4>Director</h4>
           <p>A live director's console for real-time switching and graphics, built as a web app you can run from any device.</p>
+        </div>
+        <div class="phase-card">
+          <h4>Study Groups</h4>
+          <p>Private chat for church study groups and classes with WordPal, from Peak Platforms. <a href="https://wordpal.life/" style="color:var(--accent-orange); text-decoration:underline;">Visit WordPal &rarr;</a></p>
+        </div>
+        <div class="phase-card">
+          <h4>Calls</h4>
+          <p>Bring guests and remote contributors in with Peak Link, private encrypted video calls from Peak Platforms. <a href="https://www.getpeaklink.com" style="color:var(--accent-orange); text-decoration:underline;">Visit Peak Link &rarr;</a></p>
         </div>
       </div>
     </div>
@@ -431,12 +444,23 @@
     </div>
   </section>
 
+  <div class="divider"></div>
+
+  <section id="get-station">
+    <div class="container">
+      <div class="section-eyebrow">For Communities</div>
+      <h2 class="section-title">Every community has a story. Now it can have a station.</h2>
+      <p class="section-lead">Church, school, or civic group — get your own station on the same network that carries Agora.</p>
+      <a href="https://www.getyourstation.com" class="btn">Get Your Station</a>
+    </div>
+  </section>
+
   <footer>
     <div class="container footer-inner">
       <div class="footer-mark">AGORA BROADCASTING NETWORK</div>
       <div class="footer-meta">
         © <span id="year"></span> Agora Broadcasting Network · A Peak Platforms Production<br>
-        <a href="https://peak-platforms.com" target="_blank">peak-platforms.com</a>
+        <a href="https://peak-platforms.com" target="_blank">peak-platforms.com</a> · <a href="https://wordpal.life/" target="_blank" rel="noopener">WordPal</a> · <a href="https://www.getpeaklink.com" target="_blank" rel="noopener">Peak Link</a>
       </div>
     </div>
   </footer>
@@ -447,6 +471,10 @@
 
 </body>
 </html>
+
+
+
+
 
 
 
