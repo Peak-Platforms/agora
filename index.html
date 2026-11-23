@@ -251,6 +251,9 @@
       .bg-video { display: none; }
       .bg-fallback { z-index: 0; }
     }
+    .bg-frame{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:1;pointer-events:none}
+.bg-video{display:none !important}
+@media (prefers-reduced-motion:reduce){.bg-frame{display:none}}
   </style>
 </head>
 <body>
@@ -271,7 +274,8 @@
   <section id="hero">
     <video class="bg-video" autoplay muted loop playsinline>
       <source src="https://storage.googleapis.com/xsenassets/Agora%20globe.mp4" type="video/mp4">
-    </video>
+    </video
+    <iframe class="bg-frame" src="agora_home_globe.html" title="" aria-hidden="true" tabindex="-1"></iframe>
     <div class="bg-fallback"></div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
