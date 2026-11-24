@@ -93,11 +93,15 @@ function beam(sx,sy,tx,ty,w,al){
   cx.fillStyle=g;cx.beginPath();cx.moveTo(sx+nx*0.6,sy+ny*0.6);cx.lineTo(tx+nx*w,ty+ny*w);cx.lineTo(tx-nx*w,ty-ny*w);cx.lineTo(sx-nx*0.6,sy-ny*0.6);cx.closePath();cx.fill();
   dot(tx,ty,w*2.4,SW,al*0.6);
 }
-function glyph(x,y,ang,a,k){                                  // tiny satellite: body plus two arrays
+function glyph(x,y,ang,a,k){                                  // satellite: body plus two solar arrays
   cx.save();cx.translate(x,y);cx.rotate(ang);cx.scale(k,k);cx.globalAlpha=a;
-  cx.fillStyle='rgba(160,210,255,0.22)';cx.beginPath();cx.arc(0,0,6.5,0,6.2832);cx.fill();
-  cx.fillStyle='#4f8fff';cx.fillRect(-1,-7.5,2.2,15);cx.fillStyle='#bfe0ff';cx.fillRect(-1,-7.5,0.7,15);
-  cx.fillStyle='#f2f6ff';cx.fillRect(-2.2,-1.6,3.4,3.2);cx.restore();
+  cx.fillStyle='rgba(160,210,255,0.20)';cx.beginPath();cx.arc(0,0,9,0,6.2832);cx.fill();
+  cx.fillStyle='#2f6fe0';cx.fillRect(-1.6,-10,3.2,8.4);cx.fillRect(-1.6,1.6,3.2,8.4);              // the two arrays
+  cx.strokeStyle='rgba(255,255,255,0.75)';cx.lineWidth=0.35;cx.strokeRect(-1.6,-10,3.2,8.4);cx.strokeRect(-1.6,1.6,3.2,8.4);
+  cx.beginPath();cx.moveTo(-1.6,-7.9);cx.lineTo(1.6,-7.9);cx.moveTo(-1.6,-5.8);cx.lineTo(1.6,-5.8);cx.moveTo(-1.6,-3.7);cx.lineTo(1.6,-3.7);
+  cx.moveTo(-1.6,3.7);cx.lineTo(1.6,3.7);cx.moveTo(-1.6,5.8);cx.lineTo(1.6,5.8);cx.moveTo(-1.6,7.9);cx.lineTo(1.6,7.9);cx.stroke();
+  cx.fillStyle='#f4f8ff';cx.fillRect(-3,-1.7,6,3.4);cx.strokeStyle='rgba(20,40,90,0.8)';cx.lineWidth=0.4;cx.strokeRect(-3,-1.7,6,3.4);
+  cx.restore();
 }
 
 /* ---------- the constellation: strings of satellites in tilted orbits ---------- */
@@ -193,7 +197,7 @@ function overlay(t,Mi,Mv){
   }
   // satellites on top
   for(i=0;i<SATS.length;i++){s=SATS[i];if(!s.vis)continue;var inDisc=s.p[0]*s.p[0]+s.p[1]*s.p[1]<1;
-    var a=inDisc?1:(s.p[2]>=0?1:0.55);glyph(s.s[0],s.s[1],s.ang,a,0.95+Math.max(0,s.p[2])*0.45);if(s.srv>0.05)dot(s.s[0],s.s[1],17,WB,0.55*s.srv*GLOW)}
+    var a=inDisc?1:(s.p[2]>=0?1:0.55);glyph(s.s[0],s.s[1],s.ang,a,1.15+Math.max(0,s.p[2])*0.45);if(s.srv>0.05)dot(s.s[0],s.s[1],17,WB,0.55*s.srv*GLOW)}
   // the Agora studio
   if(STU.v[2]>0.1){
     var f2=Math.min(1,STU.v[2]*3.5),ss=nearestSat(STU.v),sp=STU.s;
