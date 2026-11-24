@@ -263,6 +263,10 @@
   .nav{padding:0.9rem 5vw}
   #hero{padding-top:6.5rem}
 }
+    /* Globe: start below the fixed header and keep the whole globe in view */
+    :root { --hdr: 88px; }
+    @media (max-width: 700px) { :root { --hdr: 68px; } }
+    .bg-frame { inset: auto; top: var(--hdr); left: 50%; transform: translateX(-50%); height: calc(100% - var(--hdr)); width: min(100%, calc((100vh - var(--hdr)) * 2.05)); -webkit-mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%); mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%); }
   </style>
 </head>
 <body>
