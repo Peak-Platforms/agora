@@ -35,6 +35,9 @@
     }
     .nav { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 6vw; }
     .nav-mark { font-weight: 700; font-size: 0.95rem; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; }
+    .nav-logo-link { display:block; line-height:0; }
+    .nav-logo { display:block; height:52px; width:auto; }
+    @media (max-width: 700px) { .nav-logo { height:38px; } }
     .nav-back { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; color: var(--text-muted); }
     .nav-back:hover { color: var(--accent-orange); }
 
@@ -87,7 +90,7 @@
 
   <header>
     <div class="nav">
-      <a class="nav-mark" href="index.html">AGORA BROADCASTING NETWORK</a>
+      <a class="nav-mark nav-logo-link" href="index.html" aria-label="Agora Broadcasting Network home"><img class="nav-logo" src="agora-logo-1200px.png" alt="Agora Broadcasting Network" width="156" height="52"></a>
       <a class="nav-back" href="index.html">&larr; Back to site</a>
     </div>
   </header>
