@@ -53,6 +53,10 @@
     .nav-links a:hover { color: var(--accent-orange); }
     @media (max-width: 700px) { .nav-links { display: none; } }
 
+    .nav-logo-link { display:block; line-height:0; }
+    .nav-logo { display:block; height:52px; width:auto; }
+    @media (max-width: 700px) { .nav-logo { height:38px; } }
+
     /* REVEAL */
     .reveal {
       opacity: 0;
@@ -265,7 +269,7 @@
 
   <header>
     <div class="nav">
-      <div class="nav-mark">AGORA BROADCASTING NETWORK</div>
+      <a class="nav-mark nav-logo-link" href="/" aria-label="Agora Broadcasting Network home"><img class="nav-logo" src="agora-logo-1200px.png" alt="Agora Broadcasting Network" width="156" height="52"></a>
       <ul class="nav-links">
         <li><a href="#model">How It Works</a></li>
         <li><a href="#creators">For Creators</a></li>
@@ -481,6 +485,10 @@
 
 </body>
 </html>
+
+
+
+
 
 
 
